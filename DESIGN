@@ -1,0 +1,42 @@
+Team CHub
+Othman Bichouna, Inbar Pe’er, Daria Shifrina, Angelica Zverovich
+
+Summary: Our project will double as a text editor/github, where you can edit
+ documents, commit and push them, and then another person can continue working on them from a different computer.
+
+Features:
+Text editor
+Ability to add/commit/push/pull 
+Creating separate branches on one project
+Ability to merge to master branch
+Ability to control who is able to edit/invite specific people to your projects
+
+Program Components:
+Client-server communications
+Client will make edits to the files and push those edits to the server and server will save them
+Sockets
+Use sockets to allow multiple machines to communicate (networking)
+Semaphores
+Shared memory
+Forking
+Named pipes (FIFOs)
+Signal Handling
+
+Timeline:
+1/8: Have basic text editor working with the ability to add commit push and pull.
+1/11: Have ability to create separate branches
+1/14: Have ability to merge branches
+1/17: Have ability to invite specific people to project
+1/19: Project is ready to submit.
+
+Task Breakdown:
+Monty: Text- editor and invite feature
+
+
+Inbar:
+Work on adding committing and pushing and pulling
+Dasha:
+Work on creating seperate branches
+Angelica:
+Work on merging branches
+All of us will probably be working on every aspect of the project but this will be what we are primarily responsible for.
