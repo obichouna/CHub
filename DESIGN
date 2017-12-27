@@ -6,7 +6,7 @@ Summary: Our project will double as a text editor/github, where you can edit
 
 Features:
 Text editor
-Ability to add/commit/push/pull 
+Ability to add/commit/push/pull
 Creating separate branches on one project
 Ability to merge to master branch
 Ability to control who is able to edit/invite specific people to your projects
@@ -31,12 +31,11 @@ Timeline:
 
 Task Breakdown:
 Monty: Text- editor and invite feature
-
-
 Inbar:
 Work on adding committing and pushing and pulling
 Dasha:
 Work on creating seperate branches
 Angelica:
 Work on merging branches
+
 All of us will probably be working on every aspect of the project but this will be what we are primarily responsible for.
