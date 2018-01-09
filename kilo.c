@@ -36,7 +36,7 @@ struct editorConfig{
 struct editorConfig E;
 
 /*** defines ***/
-#define KILO_VERSION "0.0.1"
+#define CHUB_VERSION "1.0.0  "
 
 #define CTRL_KEY(k) ((k) & 0x1f) //combines control key
 
@@ -193,9 +193,9 @@ void editorDrawRows(struct abuf *ab) {
       if (E.numrows == 0 && y == E.screenrows / 3) {
         char welcome[80];
         int welcomelen = snprintf(welcome, sizeof(welcome),
-        "CHub editor -- version %s", KILO_VERSION);
+        "CHub editor -- version %s", CHUB_VERSION);
         if (welcomelen > E.screencols) welcomelen = E.screencols;
-        //use the welcome buffer and snprintf to interpolate our KILO_VERsSION string into th
+        //use the welcome buffer and snprintf to interpolate our CHub_VERSION string into th
         //e welcome message and truncate length of string in case its too tiny to fit into welcome message
 
         int padding = (E.screencols - welcomelen) / 2;
@@ -254,7 +254,7 @@ void editorOpen(char *filename) {
   fclose(fp);
 }
 
-//This function will move around the cursor
+//This function will confine the cursor within the window
 void editorScroll() {
   if (E.cy < E.rowoff) {
     E.rowoff = E.cy;
@@ -282,7 +282,8 @@ void editorRefreshScreen(){
   editorDrawRows(&ab);
 
   char buf[32];
-  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoff) + 1, E.cx + 1);
+  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoff) + 1,
+                                            (E.cx - E.coloff) + 1);
   abAppend(&ab, buf, strlen(buf)); abAppend(&ab,"\x1b[H",3);
   //moves the cursor to the position stored in E.cx and E.cy
   abAppend(&ab, "\x1b[?25h", 6);
@@ -293,27 +294,36 @@ void editorRefreshScreen(){
 
 /*** input ***/
 void editorMoveCursor(int key) {
- switch (key) {
+  erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+  switch (key) {
     case ARROW_LEFT:
-      if (E.cx != 0) {
-        E.cx--;
-      }
-      break;
+    if (E.cx != 0) {
+      E.cx--;
+    }
+    break;
     case ARROW_RIGHT:
+    if (row && E.cx < row->size) {
         E.cx++;
-        break;
+    }
+    break;
     case ARROW_UP:
-      if (E.cy != 0) {
-        E.cy--;
-      }
-      break;
+    if (E.cy != 0) {
+      E.cy--;
+    }
+    break;
     case ARROW_DOWN:
-      if (E.cy < E.numrows) {
-        E.cy++;
-      }
-      break;
+    if (E.cy < E.numrows) {
+      E.cy++;
+    }
+    break;
   }
   // allows you to use these keys to move the cursor left right up or down
+  //Case for when the cursor goes past end of the line
+  row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+  int rowlen = row ? row->size : 0;
+  if (E.cx > rowlen) {
+    E.cx = rowlen;
+  }
 }
 
 void editorProcessKeypress(){
