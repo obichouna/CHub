@@ -1,18 +1,21 @@
-#include <sys/socket.h>
-#include <sys/types.h>
-#include<netdb.h>
+#include "networking.h"
 
-int sd;
-sd = socket(AF_INET, SOCK_STREAM,0 );
-struct addrinfo *hints, *results;
+int main(int argc, char **argv) {
 
-hints = (struct addrinfo*) calloc(1,sizeof(struct(struct addrinfo));
-hints -> ai_faimly = AF_INET;
-hints-> ai_socktupe = SOCK_STREAM //TCP socket
-hints -> ai_flags =AI_PASSIVE // only needed on server
-getaddrinfo(NULL, “80”, hints, &results); //Server sets node to NULL
+  int server_socket;
+  char buffer[BUFFER_SIZE];
 
-connect(sd, results->ai_addr, results->ai_addrlen);
-	  
-free(hints);
-freeaddrinfo(results);
+  if (argc == 2)
+    server_socket = client_setup( argv[1]);
+  else
+    server_socket = client_setup( TEST_IP );
+
+  while (1) {
+    printf("enter data: ");
+    fgets(buffer, sizeof(buffer), stdin);
+    *strchr(buffer, '\n') = 0;
+    write(server_socket, buffer, sizeof(buffer));
+    read(server_socket, buffer, sizeof(buffer));
+    printf("received: [%s]\n", buffer);
+  }
+}
