@@ -28,3 +28,6 @@ int receive_data(int connection_descript,void *data);
 #include <sys/ioctl.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <string.h>
+#include <fcntl.h>
+
