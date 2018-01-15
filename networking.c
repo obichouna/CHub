@@ -1,90 +1,103 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
 #include "networking.h"
-
-
-//networking.c, it networks
-
-//int connection_descript;
 
 void error_check( int i, char *s ) {
   if ( i < 0 ) {
-    printf("%d\n", i);
     printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
     exit(1);
   }
 }
 
+/*=========================
+  server_setup
+  args:
+  creates, binds a server side socket
+  and sets it to the listening state
+  returns the socket descriptor
+  =========================*/
 int server_setup() {
-  int sd;
-  int i;
-  
+  int sd, i;
+
+  //create the socket
   sd = socket( AF_INET, SOCK_STREAM, 0 );
   error_check( sd, "server socket" );
-  struct sockaddr_in sock;
-  sock.sin_family = AF_INET;
-  sock.sin_addr.s_addr = INADDR_ANY;
-  sock.sin_port = htons(9002);
-  i = bind( sd, (struct sockaddr *)&sock, sizeof(sock) );
+  printf("[server] socket created\n");
+
+  //setup structs for getaddrinfo
+  struct addrinfo * hints, * results;
+  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  hints->ai_family = AF_INET;  //IPv4 address
+  hints->ai_socktype = SOCK_STREAM;  //TCP socket
+  hints->ai_flags = AI_PASSIVE;  //Use all valid addresses
+  getaddrinfo(NULL, PORT, hints, &results); //NULL means use local address
+
+  //bind the socket to address and port
+  i = bind( sd, results->ai_addr, results->ai_addrlen );
   error_check( i, "server bind" );
-  
+  printf("[server] socket bound\n");
+
+  //set socket to listen state
+  i = listen(sd, 10);
+  error_check( i, "server listen" );
+  printf("[server] socket in listen state\n");
+
+  //free the structs used by getaddrinfo
+  free(hints);
+  freeaddrinfo(results);
   return sd;
 }
 
+
+/*=========================
+  server_connect
+  args: int sd
+  sd should refer to a socket in the listening state
+  run the accept call
+  returns the socket descriptor for the new socket connected
+  to the client.
+  =========================*/
 int server_connect(int sd) {
-  int connection, i;
+  int client_socket;
+  socklen_t sock_size;
+  struct sockaddr_storage client_address;
 
-  i = listen(sd, 1);
-  error_check( i, "server listen" );
-  
-  struct sockaddr_in sock1;
-  unsigned int sock1_len = sizeof(sock1);
-  connection = accept( sd, (struct sockaddr *)&sock1, &sock1_len );
-  error_check( connection, "server accept" );
-  
-  printf("[server] connected to %s\n", inet_ntoa( sock1.sin_addr ) );
-  
-  //connection_descript = connection;
+  client_socket = accept(sd, (struct sockaddr *)&client_address, &sock_size);
+  error_check(client_socket, "server accept");
 
-  return connection;
+
+  return client_socket;
 }
 
-
-int client_connect( char *host ) {
+/*=========================
+  client_setup
+  args: int * to_server
+  to_server is a string representing the server address
+  create and connect a socket to a server socket that is
+  in the listening state
+  returns the file descriptor for the socket
+  =========================*/
+int client_setup(char * server) {
   int sd, i;
-  
+
+  //create the socket
   sd = socket( AF_INET, SOCK_STREAM, 0 );
   error_check( sd, "client socket" );
-  
-  struct sockaddr_in sock;
-  sock.sin_family = AF_INET;
-  inet_aton( host, &(sock.sin_addr));
-  sock.sin_port = htons(9002);
-  
-  printf("[client] connecting to: %s\n", host );
-  i = connect( sd, (struct sockaddr *)&sock, sizeof(sock) );
-  error_check( i, "client connect");
-  
-  //connection_descript = sd;
-  
+
+  //run getaddrinfo
+  /* hints->ai_flags not needed because the client
+     specifies the desired address. */
+  struct addrinfo * hints, * results;
+  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  hints->ai_family = AF_INET;  //IPv4
+  hints->ai_socktype = SOCK_STREAM;  //TCP socket
+  getaddrinfo(server, PORT, hints, &results);
+
+  //connect to the server
+  //connect will bind the socket for us
+  i = connect( sd, results->ai_addr, results->ai_addrlen );
+  error_check( i, "client connect" );
+
+  free(hints);
+  freeaddrinfo(results);
+
   return sd;
-}
-
-int send_data(int connection_descript, void * data) {
-  int success = write(connection_descript, data, 60000);
-  return success;
-}
-
-int receive_data(int connection_descript, void * data) {
-  int success = read(connection_descript, data, 64);
-  return success;
 }
