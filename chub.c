@@ -64,14 +64,70 @@ void chub_initiate(){
   printf(" `-----'`--'  `--' `-----' `------'\n");
   printf("I didn't realize it said chub (maybe it should have been C_Hub)\n")
   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n");
-  printf("Type 'login' to login to your account or 'create' to create an account \n");
+  printf("\n\nType 'login' to login to your account or 'create' to create an account \n");
   char * choice;
   while(logging_in){
     choice = chub_read();
-    if(!strncmp())
+    if(!strncmp("login", choice, 5)) {
+      /*
+
+	THIS CODE MUST BE MODIFIED TO CHECK TO MAKE SURE THE USERNAME EXISTS AND THE PASSWORD CORESPONDS
+	
+       */
+      char * username;
+      printf("Please type your username:\n");
+      int waiting = 1;
+      while(waiting){
+	username = chub_read();
+	if(strlen(user_name) > 0){
+	  waiting = 0;
+	}
+      }
+      printf("Please type your password:\n");
+      waiting = 1;
+      char * password;
+       while(waiting){
+	password = chub_read();
+	if(strlen(password) > 0){
+	  waiting = 0;
+	}
+      }
+    }else if(!strncmp("create", choice, 6)){
+      /*
+
+	THIS CODE MUST BE MODIFIED TO CHECK IF THE USERNAME ALREADY EXISTS
+
+       */
+      char * username;
+      printf("Please type your new account username:\n");
+      int waiting = 1;
+      while(waiting){
+	username = chub_read();
+	if(strlen(user_name) > 0){
+	  waiting = 0;
+	}
+      }
+      printf("Please type your password for this new account:\n");
+      waiting = 1;
+      char * password;
+      char * confirm;
+       while(waiting){
+	password = chub_read();
+	if(strlen(password) > 0){
+	  printf("Please confirm your password:\n");
+	  while(waiting){
+	    confirm = chub_read;
+	    if(!strcmp(password, confirm)){
+	      printf("Account created\n");
+	      waiting = 0;
+	    }
+	  }
+	}
+       }
+    }
+    logging_in = 0;
   }
 }
-
 
 int chub_functions(char ** args){
   if(!args[0]){
