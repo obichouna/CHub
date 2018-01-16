@@ -4,3 +4,7 @@ dariaS -- 2018-01-15 18:16:24
 fixed networking files to allow server-client connection
 
 
+othmanB -- 2018-01-16 11:52:20
+Worked on logging in and initiation, requires servers to hold data 
+
+
