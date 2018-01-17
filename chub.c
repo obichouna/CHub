@@ -166,12 +166,30 @@ int chub_functions(char ** args){
 }
 int repo_checker_s(char * name){
   //checks if repo exists on the server
+  //returns 0 if doesnt exist and 1 if it exists 
+  
+}
+
+int repo_create_s(char *name){
+  //creates the repo on the server
 }
 
 //to use a chub operation you write chub <operation <repo name>
 
 int chub_operations(char ** func){
   if(func[1]){
+    if(!strncmp("create", func[1], 5)){
+      if(func[2] && repo_checker_s(func[2])){
+	//checks if the repo exists on the server
+	printf("repo already exists! choose another name or clone\n");
+      }
+      if(func[2]){
+	repo_create_s(func[2]);
+      }
+      else{
+	printf("Please name your repo!\n");
+      }
+    }
     if (!strncmp("clone", func[1], 5)){
       if(func[2] && repo_checker_s(func[2])){
       //How this will work is that the server checks if it has a repo
@@ -193,10 +211,23 @@ int chub_operations(char ** func){
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
     }
-    if(strncmp("commit", func[1],6)){
+    if(!strncmp("commit", func[1],6)){
       if(func[2] && repo_checker_s(func[2])){
-        //im not really sure how this is going to work but it definitely needs to check if it exists first       
-}
+        //checks if the repo exists on the server
+      }
+      else{
+	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
+      }
+    }
+    if(!strncmp("push", func[1],4){
+      if(func[2] && repo_checker_s(func[2])){
+        //checks if the repo exists on the server
+      }
+      else{
+	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
+      }
+    
+    
   
 }
 
