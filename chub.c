@@ -62,7 +62,7 @@ void chub_initiate(){
   printf("|  |    |  .--.  ||  | |  ||  .-.  \\ \n");
   printf("'  '--'\\|  |  |  |'  '-'  '|  '--' / \n");
   printf(" `-----'`--'  `--' `-----' `------'\n");
-  printf("I didn't realize it said chub (maybe it should have been C_Hub)\n")
+  // printf("I didn't realize it said chub (maybe it should have been C_Hub)\n")
   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n");
   printf("\n\nType 'login' to login to your account or 'create' to create an account \n");
   char * choice;
@@ -164,13 +164,40 @@ int chub_functions(char ** args){
   }
   return 1;
 }
+int repo_checker_s(char * name){
+  //checks if repo exists on the server
+}
+
+//to use a chub operation you write chub <operation <repo name>
 
 int chub_operations(char ** func){
-  if (!strncmp("clone", func[1], 5)){
-    //How this will work is that the server checks if it has a repo
-    //under "repo_name" and if it does, it will make a repository on the client's machine
-    printf("Cloning %s repository into directory \n", repo_name);
-  }
+  if(func[1]){
+    if (!strncmp("clone", func[1], 5)){
+      if(func[2] && repo_checker_s(func[2])){
+      //How this will work is that the server checks if it has a repo
+      //under "repo_name" and if it does, it will make a repository on the client's machine
+      // if it doesnt it will return an error that the repository does not exist 
+      printf("Cloning %s repository into directory \n", repo_name);
+      }
+      else{
+	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
+      }
+    }
+    if(!strncmp("pull", func[1], 4)){
+      //The server checks if it has a repo
+      if(func[2] && repo_checker_s(func[2])){
+	//delete the repo from the client
+	//re create the repo on client machine"
+      }
+      else{
+	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
+      }
+    }
+    if(strncmp("commit", func[1],6)){
+      if(func[2] && repo_checker_s(func[2])){
+        //im not really sure how this is going to work but it definitely needs to check if it exists first       
+}
+  
 }
 
 
