@@ -173,9 +173,21 @@ int repo_checker_s(char * name){
 int repo_create_s(char *name){
   //creates the repo on the server
 }
+int repo_delete_s(char *name){
+}
+int repo_create_c(char *name){
+  //I'm not sure if we need to make two seperate files for the client and the server functions??
+}
 
-//to use a chub operation you write chub <operation <repo name>
+int repo_checker_c(char *name){
+}
 
+
+int repo_delete_c(char *name){
+  //deletes repo!!
+}
+
+//**** to use a chub operation you write chub <operation <repo name>*****//
 int chub_operations(char ** func){
   if(func[1]){
     if(!strncmp("create", func[1], 5)){
@@ -222,6 +234,8 @@ int chub_operations(char ** func){
     if(!strncmp("push", func[1],4){
       if(func[2] && repo_checker_s(func[2])){
         //checks if the repo exists on the server
+	//deletes repo on server
+	//recreates it based on client 
       }
       else{
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
