@@ -1,0 +1,22 @@
+char* fs_name = "/home/aryan/Desktop/quotidiani.txt";
+char sdbuf[LENGTH]; 
+printf("[Client] Sending %s to the Server... ", fs_name);
+FILE *fs = fopen(fs_name, "r");
+if(fs == NULL)
+  {
+    printf("ERROR: File %s not found.\n", fs_name);
+    exit(1);
+  }
+
+bzero(sdbuf, LENGTH); 
+int fs_block_sz; 
+while((fs_block_sz = fread(sdbuf, sizeof(char), LENGTH, fs)) > 0)
+  {
+    if(send(sockfd, sdbuf, fs_block_sz, 0) < 0)
+      {
+	fprintf(stderr, "ERROR: Failed to send file %s. (errno = %d)\n", fs_name, errno);
+	break;
+      }
+    bzero(sdbuf, LENGTH);
+  }
+printf("Ok File %s from Client was Sent!\n", fs_name);
