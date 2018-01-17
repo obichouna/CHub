@@ -254,6 +254,22 @@ void editorOpen(char *filename) {
   fclose(fp);
 }
 
+// void editorOpen(char *filename) {
+// FILE *fp = fopen(filename, "r");
+// if (!fp) die("fopen");
+// char *line = NULL;
+//size_t linecap = 0;
+//  ssize_t linelen;
+// while ((linelen = getline(&line, &linecap, fp)) != -1) {
+//  while (linelen > 0 && (line[linelen - 1] == '\n' ||
+//                       line[linelen - 1] == '\r'))
+// linelen--;
+//editorAppendRow(line, linelen);
+// }
+//free(line);
+//fclose(fp);
+//}
+
 //This function will confine the cursor within the window
 void editorScroll() {
   if (E.cy < E.rowoff) {
@@ -293,6 +309,40 @@ void editorRefreshScreen(){
 }
 
 /*** input ***/
+
+/***void editorMoveCursor(int key) {
+  erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+  switch (key) {
+    case ARROW_LEFT:
+    if (E.cx != 0) {
+      E.cx--;
+    }
+    break;
+    case ARROW_RIGHT:
+    if (row && E.cx < row->size) {
+        E.cx++;
+    }
+    break;
+    case ARROW_UP:
+    if (E.cy != 0) {
+      E.cy--;
+    }
+    break;
+    case ARROW_DOWN:
+    if (E.cy < E.numrows) {
+      E.cy++;
+    }
+    break;
+  }
+  // allows you to use these keys to move the cursor left right up or down
+  //Case for when the cursor goes past end of the line
+  row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+  int rowlen = row ? row->size : 0;
+  if (E.cx > rowlen) {
+    E.cx = rowlen;
+  }
+}
+**/
 void editorMoveCursor(int key) {
   erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
   switch (key) {
