@@ -1,4 +1,4 @@
-#include <unistd.h>
+g#include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -57,7 +57,12 @@ void chub_prompt(){
 }
 
 void chub_initiate(){
-  
+  printf(" ,-----.,--.  ,--.,--. ,--.,-----. \n");
+  printf("'  .--./|  '--'  ||  | |  ||  |) /_ \n");
+  printf("|  |    |  .--.  ||  | |  ||  .-.  \\ \n");
+  printf("'  '--'\\|  |  |  |'  '-'  '|  '--' / \n");
+  printf(" `-----'`--'  `--' `-----' `------'\n");
+  printf("I didn't realize it said chub (maybe it should have been C_Hub)\n")
   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n");
   printf("\n\nType 'login' to login to your account or 'create' to create an account \n");
   char * choice;
