@@ -1,10 +1,12 @@
-g#include <unistd.h>
+#include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
+#include "networking.h"
+#include "chub_headers.h"
 #define MEM_ERR 42
 
 void chub(){
