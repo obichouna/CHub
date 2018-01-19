@@ -8,3 +8,7 @@ othmanB -- 2018-01-16 11:52:20
 Worked on logging in and initiation, requires servers to hold data 
 
 
+othmanB -- 2018-01-19 11:48:10
+added header, going to move around all functions to networking because it requires server and client interaction 
+
+
