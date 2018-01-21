@@ -9,6 +9,7 @@
 #include "chub_headers.h"
 #define MEM_ERR 42
 
+
 void chub(){
   //The main loop - Reads from stdin, parses, and runs arguments
   char * line;
@@ -167,6 +168,13 @@ int chub_functions(char ** args){
   return 1;
 }
 int repo_checker_s(char * name){
+  FILE *fs = fopen(name, "r");
+  if(fs == NULL)
+    {
+      printf("ERROR: File %s not found.\n", name);
+      exit(1);
+    }
+
   //checks if repo exists on the server
   //returns 0 if doesnt exist and 1 if it exists 
   
@@ -182,6 +190,12 @@ int repo_create_c(char *name){
 }
 
 int repo_checker_c(char *name){
+  FILE *fs = fopen(name, "r");
+  if(fs == NULL)
+    {
+      printf("ERROR: File %s not found.\n", name);
+      exit(1);
+    }
 }
 
 
