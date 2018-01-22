@@ -172,44 +172,16 @@ int repo_checker_s(char * name){
   if(fs == NULL)
     {
       printf("ERROR: File %s not found.\n", name);
-      exit(1);
+      return 0;
     }
+  return 1;
 
   //checks if repo exists on the server
   //returns 0 if doesnt exist and 1 if it exists 
   
 }
 
-int parse_s(int client_socket){
-  char buffer[BUFFER_LENGTH +1];
-  buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
-  read(client_socket, buffer, BUFFER_LENGTH);
-  chub_parse(buffer, parsed);
-  if(parsed[0]){
-    if(!strncmp("create", parsed[0], 5)){
-      if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(!exists){
-	  if(execvp(func[0], func) == -1){
-        printf("error: incorrect input\n");
-        free(func);
-        exit(NO_ARGS);
-      }else{
-        execvp(func[0], func);
-        //execvp(args[0], args);
-        exit(0);
-      }
-    }else{
-      int status;
-      wait(&status);
-    }
-  }
-    x++;
-    free(func);
-  }
-  return 1;
-}
+
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -234,25 +206,23 @@ int parse_s(int client_socket){
       if(parsed[1]){
 	int exists=repo_checker_s(parsed[1]);
 	if(!exists){
-	  if(execvp(func[0], func) == -1){
-        printf("error: incorrect input\n");
-        free(func);
-        exit(NO_ARGS);
-      }else{
-        execvp(func[0], func);
-        //execvp(args[0], args);
-        exit(0);
+	  mkdir(parsed[1], 0666);
+	  printf("Created repository named: %s \n", parsed[1]);
+	  return 1;
+	}
+	printf("Repository with that name already exists. Could not create. \n");
       }
-    }else{
-      int status;
-      wait(&status);
     }
   }
-    x++;
-    free(func);
-  }
-  return 1;
+  printf("Something went wrong... please try again.\n");
+  return 0;
 }
+ 
+//returns 1 if succeeded and 0 if failed. 
+
+	  
+	    
+        
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -265,26 +235,6 @@ int repo_checker_s(char * name){
   //returns 0 if doesnt exist and 1 if it exists 
   
 }
-
-int parse_s(int client_socket){
-  char buffer[BUFFER_LENGTH +1];
-  buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
-  read(client_socket, buffer, BUFFER_LENGTH);
-  chub_parse(buffer, parsed);
-  if(parsed[0]){
-    if(!strncmp("create", parsed[0], 5)){
-      if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(!exists){
-	  
-	  
-  
-  
-}
-
-
-
 
 
 int repo_delete_s(char *name){
@@ -317,9 +267,9 @@ int repo_delete_c(char *name){
 
 //**** to use a chub operation you write chub <operation <repo name>*****//
 int chub_operations(char ** func){
-  if(func[0]){
-    if(!strncmp("create", func[0], 5)){
-      if(func[1] && repo_checker_s(func[2])){
+  if(func[1]){
+    if(!strncmp("create", func[1], 5)){
+      if(func[2] && repo_checker_s(func[2])){
 	//checks if the repo exists on the server
 	printf("repo already exists! choose another name or clone\n");
       }
@@ -330,8 +280,8 @@ int chub_operations(char ** func){
 	printf("Please name your repo!\n");
       }
     }
-    if (!strncmp("clone", func[0], 5)){
-      if(func[1] && repo_checker_s(func[1])){
+    if (!strncmp("clone", func[1], 5)){
+      if(func[2] && repo_checker_s(func[2])){
       //How this will work is that the server checks if it has a repo
       //under "repo_name" and if it does, it will make a repository on the client's machine
       // if it doesnt it will return an error that the repository does not exist 
@@ -341,9 +291,9 @@ int chub_operations(char ** func){
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
     }
-    if(!strncmp("pull", func[0], 4)){
+    if(!strncmp("pull", func[1], 4)){
       //The server checks if it has a repo
-      if(func[1] && repo_checker_s(func[1])){
+      if(func[2] && repo_checker_s(func[2])){
 	//delete the repo from the client
 	//re create the repo on client machine"
       }
@@ -351,16 +301,16 @@ int chub_operations(char ** func){
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
     }
-    if(!strncmp("commit", func[0],6)){
-      if(func[1] && repo_checker_s(func[1])){
+    if(!strncmp("commit", func[1],6)){
+      if(func[2] && repo_checker_s(func[2])){
         //checks if the repo exists on the server
       }
       else{
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
     }
-    if(!strncmp("push", func[0],4){
-      if(func[1] && repo_checker_s(func[1])){
+    if(!strncmp("push", func[1],4){
+      if(func[2] && repo_checker_s(func[2])){
         //checks if the repo exists on the server
 	//deletes repo on server
 	//recreates it based on client 
