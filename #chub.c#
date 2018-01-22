@@ -234,25 +234,14 @@ int parse_s(int client_socket){
       if(parsed[1]){
 	int exists=repo_checker_s(parsed[1]);
 	if(!exists){
-	  if(execvp(func[0], func) == -1){
-        printf("error: incorrect input\n");
-        free(func);
-        exit(NO_ARGS);
-      }else{
-        execvp(func[0], func);
-        //execvp(args[0], args);
-        exit(0);
-      }
-    }else{
-      int status;
-      wait(&status);
-    }
-  }
-    x++;
-    free(func);
-  }
-  return 1;
-}
+	  mkdir(parsed[1], 0666);
+	  printf("Created repository named: %s \n", parsed[1]);
+	  return 0;
+	}
+	printf("Repository with
+	  
+	    
+        
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -265,26 +254,6 @@ int repo_checker_s(char * name){
   //returns 0 if doesnt exist and 1 if it exists 
   
 }
-
-int parse_s(int client_socket){
-  char buffer[BUFFER_LENGTH +1];
-  buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
-  read(client_socket, buffer, BUFFER_LENGTH);
-  chub_parse(buffer, parsed);
-  if(parsed[0]){
-    if(!strncmp("create", parsed[0], 5)){
-      if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(!exists){
-	  
-	  
-  
-  
-}
-
-
-
 
 
 int repo_delete_s(char *name){
