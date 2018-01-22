@@ -3,7 +3,7 @@
 #include<netdb.h>
 
 int sd; 
-Sd = socket(AD_INET, SOCK_STREAM, 0);
+sd = socket(AD_INET, SOCK_STREAM, 0);
 
 struct addrinfo * hints, * results;
 hints = (struct addrinfo*) calloc(1,sizeof(struct(struct addrinfo));
