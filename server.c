@@ -2,8 +2,7 @@
 #include <sys/types.h>
 #include<netdb.h>
 #define BUFFER_LENGTH 256
-
-
+/*** 
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -39,7 +38,7 @@ int parse_s(int client_socket){
   printf("Something went wrong... please try again.\n");
   return 0;
 }
-
+**/
 int sd; 
 sd = socket(AD_INET, SOCK_STREAM, 0);
 

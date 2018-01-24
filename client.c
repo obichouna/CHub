@@ -2,6 +2,7 @@
 #include "chub_headers.h"
 #define MEM_ERR 42
 #define BUFFER_LENGTH 256
+/**
 int create_c(int server_socket, char *name){
   char buffer[BUFFER_LENGTH];
   sprintf(buffer, "create %s ", name); 
@@ -22,7 +23,7 @@ int repo_checker_c(char *name){
       exit(1);
     }
 }
-
+**/
 //creating repo
 
 char * ask_for_dir(){
