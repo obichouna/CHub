@@ -181,18 +181,48 @@ int repo_checker_s(char * name){
   
 }
 
+int file_send_c(char *name){
+unsigned long fsize;
+ if(repo_checker_c){
+    printf("Found file %s\n", filename);
 
-int repo_checker_s(char * name){
-  FILE *fs = fopen(name, "r");
-  if(fs == NULL)
+    fseek(name, 0, SEEK_END);
+    fsize = ftell(name);
+    rewind(name);
+
+    printf("File contains %ld bytes!\n", fsize);
+    printf("Sending the file now");
+}
+
+while (1) 
+{
+  int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
+    if (bytes_read == 0) // done reading file
+        break;
+
+    if (bytes_read < 0) 
     {
-      printf("ERROR: File %s not found.\n", name);
-      exit(1);
+        printf("ERROR reading from file\n"); 
     }
 
-  //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists 
-  
+    //write will return how many bytes were written.
+    // p keeps track of where in the buffer we are,
+    //bytes_read to keep track of how many bytes are left to write.
+    void *p = buffer;
+    while (bytes_read > 0) 
+    {
+        int bytes_written = write(sockfd, buffer, bytes_read);
+        if (bytes_written <= 0) 
+        {
+            error("ERROR writing to socket\n");
+        }
+        bytes_read -= bytes_written;
+        p += bytes_written;
+    }
+}       
+
+printf("file sent\n");
+return 0;
 }
 
 int parse_s(int client_socket){
