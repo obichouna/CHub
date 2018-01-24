@@ -1,6 +1,44 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include<netdb.h>
+#define BUFFER_LENGTH 256
+
+
+int repo_checker_s(char * name){
+  FILE *fs = fopen(name, "r");
+  if(fs == NULL)
+    {
+      printf("ERROR: File %s not found.\n", name);
+      exit(1);
+    }
+
+  //checks if repo exists on the server
+  //returns 0 if doesnt exist and 1 if it exists 
+  
+}
+
+int parse_s(int client_socket){
+  char buffer[BUFFER_LENGTH +1];
+  buffer[BUFFER_LENGTH]=0;
+  char **parsed; 
+  read(client_socket, buffer, BUFFER_LENGTH);
+  chub_parse(buffer, parsed);
+  if(parsed[0]){
+    if(!strncmp("create", parsed[0], 5)){
+      if(parsed[1]){
+	int exists=repo_checker_s(parsed[1]);
+	if(!exists){
+	  mkdir(parsed[1], 0666);
+	  printf("Created repository named: %s \n", parsed[1]);
+	  return 1;
+	}
+	printf("Repository with that name already exists. Could not create. \n");
+      }
+    }
+  }
+  printf("Something went wrong... please try again.\n");
+  return 0;
+}
 
 int sd; 
 sd = socket(AD_INET, SOCK_STREAM, 0);

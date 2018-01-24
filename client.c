@@ -1,5 +1,27 @@
 #include "networking.h"
+#include "chub_headers.h"
+#define MEM_ERR 42
+#define BUFFER_LENGTH 256
+int create_c(int server_socket, char *name){
+  char buffer[BUFFER_LENGTH];
+  sprintf(buffer, "create %s ", name); 
+  write(server_socket,buffer,BUFFER_LENGTH);
+  read(server_socket,buffer, 1);
+  if(buffer[0]){
+    fprintf(stderr, "I'm sorry, something went wrong. Failed to create %s. Please try again.\n", name);
+    return 1;
+  }
+  return 0;
+}
 
+int repo_checker_c(char *name){
+  FILE *fs = fopen(name, "r");
+  if(fs == NULL)
+    {
+      printf("ERROR: File %s not found.\n", name);
+      exit(1);
+    }
+}
 
 //creating repo
 
