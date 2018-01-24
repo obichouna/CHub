@@ -222,6 +222,48 @@ int file_send_c(char *name){
 
 }
 
+int file_send_s(char *name){
+   unsigned long fsize;
+  if(repo_checker_c){
+    printf("found file %s\n", filename);
+    fseek(name, 0, SEEK_END);
+    fsize = ftell(name);
+    rewind(name);
+
+    printf("file contains %ld bytes\n", fsize);
+    printf("sending file");
+
+    while (1){
+      int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
+      if (bytes_read == 0) // done reading file
+	break;
+      if (bytes_read < 0) 
+	{
+      printf("problem reading from file\n"); 
+	}
+      //write will return how many bytes were written.
+      // p keeps track of where in the buffer we are,
+      //bytes_read to keep track of how many bytes are left to write.
+      void *p = buffer;
+      while (bytes_read > 0) 
+	{
+        int bytes_written = write(sockfd, buffer, bytes_read);
+        if (bytes_written <= 0) 
+        {
+            error("ERROR writing to socket\n");
+        }
+        bytes_read -= bytes_written;
+        p += bytes_written;
+	}
+    }
+    printf("file sent\n");
+    return 0;
+ }
+ return 1; 
+
+}
+
+
 int parse_s(int client_socket){
   char buffer[BUFFER_LENGTH +1];
   buffer[BUFFER_LENGTH]=0;
