@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
   fd_set read_fds;
 
   if (argc == 2)
-    server_socket = client_setup( buffer0);
+    server_socket = client_setup( TEST_IP);
   else
-    server_socket = client_setup( TEST_IP );
+    server_socket = client_setup( buffer0);
 
   while (1) {
 
