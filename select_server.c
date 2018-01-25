@@ -6,6 +6,15 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <termios.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <errno.h>
+#include <string.h>
+#include "networking.h"
+#include "chub_headers.h"
 
 #include "networking.h"
 
