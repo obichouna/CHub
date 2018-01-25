@@ -8,6 +8,13 @@
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <time.h>
+#include <string.h>
+
 
 #ifndef NETWORKING_H
 #define NETWORKING_H
@@ -23,4 +30,3 @@ int client_setup(char * server);
 
 
 #endif
-
