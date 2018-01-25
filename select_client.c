@@ -53,12 +53,12 @@ int parse_c(char buffer[], int server_socket){
   }
 }
 
-int file_receive_c(char *FILENAME, int sockfd){
+int file_receive_c(char * FILENAME, int sockfd){
   char buffer[BUFFER_SIZE];
   int bytesReceived = 0;
   FILE *fp;
   printf("stuff 1\n");
-  fp = fopen("sample_file.txt", "ab");
+  fp = fopen(FILENAME, "r");
   printf("stuff 2\n");
   if(NULL == fp)
     {

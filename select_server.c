@@ -53,7 +53,7 @@ char ** chub_parse(char * line, char * arg){
 
 char * file_send_c(char *filename, int sockfd){
   char buffer[BUFFER_SIZE];
-  FILE * name = fopen(filename, "r");
+  FILE * name = fopen(filename, "w");
   unsigned long fsize;
   if(repo_checker_c){
     printf("found file %s\n", filename);
@@ -137,6 +137,35 @@ int parse_s(char buffer[], int client_socket){
   }
 }
 
+
+void subserver(int client_socket) {
+  char buffer[BUFFER_SIZE];
+
+  //for testing client select statement
+  strncpy(buffer, "hello client", sizeof(buffer));
+  write(client_socket, buffer, sizeof(buffer));
+
+  while (read(client_socket, buffer, sizeof(buffer))) {
+
+    parse_s(buffer, client_socket);
+    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
+    process(buffer);
+    write(client_socket, buffer, sizeof(buffer));
+  }//end read loop
+  close(client_socket);
+  exit(0);
+}
+
+void process(char * s) {
+  while (*s) {
+    if (*s >= 'a' && *s <= 'z')
+      *s = ((*s - 'a') + 13) % 26 + 'a';
+    else  if (*s >= 'A' && *s <= 'Z')
+      *s = ((*s - 'a') + 13) % 26 + 'a';
+    s++;
+  }
+}
+
 int main() {
 
   int listen_socket;
@@ -180,33 +209,5 @@ int main() {
       fgets(buffer, sizeof(buffer), stdin);
       printf("[server] subserver count: %d\n", subserver_count);
     }//end stdin select
-  }
-}
-
-void subserver(int client_socket) {
-  char buffer[BUFFER_SIZE];
-
-  //for testing client select statement
-  strncpy(buffer, "hello client", sizeof(buffer));
-  write(client_socket, buffer, sizeof(buffer));
-
-  while (read(client_socket, buffer, sizeof(buffer))) {
-
-    parse_s(buffer, client_socket);
-    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
-    write(client_socket, buffer, sizeof(buffer));
-  }//end read loop
-  close(client_socket);
-  exit(0);
-}
-
-void process(char * s) {
-  while (*s) {
-    if (*s >= 'a' && *s <= 'z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    else  if (*s >= 'A' && *s <= 'Z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    s++;
   }
 }
