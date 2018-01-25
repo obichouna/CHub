@@ -148,7 +148,9 @@ int parse_s(char buffer[], int client_socket){
 	if(exists){
 	  // printf("stuff\n");
 	  file_send_c(parsed[1], client_socket);
-	  printf("Copied repository named: %s \n", parsed[1]);
+	  printf("Sent file named: %s \n", parsed[1]);
+	  file_receive_c(parsed[1], client_socket);
+	  printf("Client received file named: %s \n", parsed[1]);
 	  return 1;
 	}
 	else{
