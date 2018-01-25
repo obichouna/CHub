@@ -60,39 +60,7 @@ char ** chub_parse(char * line, char * arg){
   return args;
 }
 
-int file_receive_c(char *FILENAME, int sockfd){
-  char buffer[BUFFER_SIZE];
-  int bytesReceived = 0;
-  FILE *fp;
-  printf("stuff 1\n");
-  fp = fopen("sample_file.txt", "ab");
-  printf("stuff 2\n");
-  if(NULL == fp)
-    {
-      printf("Error opening file");
-      return 1;
-    }
-  printf("stuff 3\n");
-  /* Receive data in chunks of 256 bytes */
-  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
-    {
-      printf("stuff 4\n");
-      printf("Bytes received %d\n",bytesReceived);    
-      // recvBuff[n] = 0;
-      fwrite(buffer, 1,bytesReceived,fp);
-      // printf("%s \n", recvBuff);
-    }
-  printf("stuff 5\n");
-  if(bytesReceived < 0)
-    {
-      printf("\n Read Error \n");
-    }
-
-  printf("stuff 6\n");
-  return 0;
-}
-
-int file_send_c(char *filename, int sockfd){
+char * file_send_c(char *filename, int sockfd){
   char buffer[BUFFER_SIZE];
   FILE * name = fopen(filename, "r");
   unsigned long fsize;
@@ -129,9 +97,9 @@ int file_send_c(char *filename, int sockfd){
 	}
     }
     printf("file sent\n");
-    return 0;
+    return "receiving_file";
  }
- return 1;
+ return 0;
 
 }
 
@@ -280,3 +248,36 @@ int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW
       }
     }
     */
+
+
+/*  int file_receive_c(char *FILENAME, int sockfd){
+  char buffer[BUFFER_SIZE];
+  int bytesReceived = 0;
+  FILE *fp;
+  printf("stuff 1\n");
+  fp = fopen("sample_file.txt", "ab");
+  printf("stuff 2\n");
+  if(NULL == fp)
+    {
+      printf("Error opening file");
+      return 1;
+    }
+  printf("stuff 3\n");
+  //Receive data in chunks of 256 bytes 
+  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
+    {
+      printf("stuff 4\n");
+      printf("Bytes received %d\n",bytesReceived);    
+      // recvBuff[n] = 0;
+      fwrite(buffer, 1,bytesReceived,fp);
+      // printf("%s \n", recvBuff);
+    }
+  printf("stuff 5\n");
+  if(bytesReceived < 0)
+    {
+      printf("\n Read Error \n");
+    }
+
+  printf("stuff 6\n");
+  return 0;
+}*/
