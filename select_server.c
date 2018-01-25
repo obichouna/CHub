@@ -1,10 +1,14 @@
+#define _XOPEN_SOURCE 500
+//#include <ftw.h>
+#include <sys/select.h>
+#include <string.h>
 #include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
-#include <string.h>
+//#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <termios.h>
@@ -12,12 +16,10 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
-#include <string.h>
-#include "networking.h"
-#include "chub_headers.h"
 #include <ftw.h>
 #include "networking.h"
-#define _XOPEN_SOURCE 500
+#include "chub_headers.h"
+#include "networking.h"
 #define MEM_ERR 42
 #define BUFFER_LENGTH 256
 
@@ -163,7 +165,6 @@ int file_send_c(char *filename, int sockfd){
 
 }
 
-/*
 //angelica
 int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
     int rv = remove(fpath);
@@ -172,7 +173,7 @@ int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW
     return rv;
 }
 
-*/
+
 
 int parse_s(char buffer[], int client_socket){
   // char buffer[BUFFER_LENGTH +1];
@@ -194,7 +195,7 @@ int parse_s(char buffer[], int client_socket){
 	        printf("Repository with that name already exists. Could not create. \n");
       }
     }
-    /*
+    
     ///for removing dir code
     if(!strncmp("remove", parsed[0], 5)){
       if(parsed[1]){
@@ -209,7 +210,7 @@ int parse_s(char buffer[], int client_socket){
         printf("Repository with that name does not exist. Could not delete. \n");
       }
     }
-    */
+    
 
 
     ///for cloning repo
