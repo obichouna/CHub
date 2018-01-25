@@ -57,6 +57,7 @@ int file_send_c(char *filename, int sockfd){
     printf("found file %s\n", filename);
     fseek(name, 0, SEEK_END);
     fsize = ftell(name);
+    printf("stuff\n");
     rewind(name);
 
     printf("file contains %ld bytes\n", fsize);
