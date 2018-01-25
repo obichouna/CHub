@@ -55,6 +55,7 @@ int file_receive_c(char *FILENAME, int client_socket){
   int file_size;
   FILE *received_file;
   int remain_data = 0;
+  printf("stuff here\n");
   recv(client_socket, buffer, BUFSIZ, 0);
   file_size = atoi(buffer);
   printf("stuff here\n");
