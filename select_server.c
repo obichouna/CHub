@@ -130,6 +130,7 @@ int parse_s(char buffer[], int client_socket){
   // read(client_socket, buffer, BUFFER_LENGTH);
   parsed = chub_parse(buffer, " ");
   if(parsed[0]){
+    ///for creating repo on server
     if(!strncmp("create", parsed[0], 5)){
       if(parsed[1]){
 	int exists=repo_checker_s(parsed[1]);
@@ -142,6 +143,22 @@ int parse_s(char buffer[], int client_socket){
 	printf("Repository with that name already exists. Could not create. \n");
       }
     }
+
+    ///for removing dir code
+    if(!strncmp("remove", parsed[0], 5)){
+      if(parsed[1]){
+	int exists=repo_checker_s(parsed[1]);
+	if(exists){
+	  // printf("stuff\n");
+	  rmdir(parsed[1], 0666);
+	  printf("Deleted repository named: %s \n", parsed[1]);
+	  return 1;
+	}
+	printf("Repository with that name does not exist. Could not delete. \n");
+      }
+    }
+
+    ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
 	int exists=repo_checker_s(parsed[1]);
