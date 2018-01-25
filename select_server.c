@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE 500
+//#define _XOPEN_SOURCE 500
 //#include <ftw.h>
 #include <sys/select.h>
 #include <string.h>
@@ -165,6 +165,8 @@ int file_send_c(char *filename, int sockfd){
 
 }
 
+
+/*
 //angelica
 int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
     int rv = remove(fpath);
@@ -172,7 +174,7 @@ int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW
         perror(fpath);
     return rv;
 }
-
+*/
 
 
 int parse_s(char buffer[], int client_socket){
@@ -186,16 +188,16 @@ int parse_s(char buffer[], int client_socket){
     if(!strncmp("create", parsed[0], 5)){
       if(parsed[1]){
         int exists=repo_checker_s(parsed[1]);
-	      if(!exists){
+	if(!exists){
           // printf("stuff\n");
           mkdir(parsed[1], 0666);
           printf("Created repository named: %s \n", parsed[1]);
           return 1;
-	       }
-	        printf("Repository with that name already exists. Could not create. \n");
+	}
+	printf("Repository with that name already exists. Could not create. \n");
       }
     }
-    
+    /* 
     ///for removing dir code
     if(!strncmp("remove", parsed[0], 5)){
       if(parsed[1]){
@@ -205,14 +207,12 @@ int parse_s(char buffer[], int client_socket){
           //mdir(parsed[1], 0666);
           nftw(parsed[1], unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
           printf("Deleted repository named: %s \n", parsed[1]);
-	        return 1;
+	  return 1;
         }
         printf("Repository with that name does not exist. Could not delete. \n");
       }
     }
-    
-
-
+    */
     ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
