@@ -1,4 +1,7 @@
 #include "networking.h"
+//#include "chub_headers.h"
+//#define MEM_ERR 42
+//#define BUFFER_LENGTH 256
 
 int file_receive_c(char *FILENAME, int sockfd);
 char ** chub_parse(char * line, char * arg);
@@ -33,7 +36,7 @@ int parse_c(char buffer[], int server_socket){
   // read(client_socket, buffer, BUFFER_LENGTH);
   parsed = chub_parse(buffer, " ");
   if(parsed[0]){
-    
+
     ///for creating repo on server
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
@@ -70,7 +73,7 @@ int file_receive_c(char * FILENAME, int sockfd){
   while((bytesReceived = read(sockfd, buffer, 256)) > 0)
     {
       printf("stuff 4\n");
-      printf("Bytes received %d\n",bytesReceived);    
+      printf("Bytes received %d\n",bytesReceived);
       // recvBuff[n] = 0;
       fwrite(buffer, 1,bytesReceived,fp);
       // printf("%s \n", recvBuff);
@@ -85,8 +88,160 @@ int file_receive_c(char * FILENAME, int sockfd){
   return 0;
 }
 
+/*
+void chub(){
+  //The main loop - Reads from stdin, parses, and runs arguments
+  char * line;
+  char ** args;
+  int run = 1;
+  //chub_initiate();
+  while(run){
+    //signal(SIGINT, sighandler);
+    chub_prompt();
+    line = chub_read();
+    args = chub_parse(line, ";");
+    run = chub_functions(args);
+    free(line);
+    free(args);
+  }
+}
 
 
+char * chub_read(){
+  //Allocates memory for reading
+  char * buffer = (char *)calloc(256, sizeof(char));
+  if(!buffer){
+    //Checks to see if buffer really allocated
+    printf("CHub: > Allocation Error\n");
+    exit(MEM_ERR);
+  }
+  fgets(buffer, 256, stdin);
+  buffer[strlen(buffer) - 1] = 0;
+  return buffer;
+
+}
+
+
+void chub_prompt(){
+  char cwd[256];
+  getcwd(cwd, sizeof(cwd));
+  fprintf(stdout, "CHub:%s$ ", cwd);
+}
+
+
+void chub_initiate(){
+  printf(" ,-----.,--.  ,--.,--. ,--.,-----. \n");
+  printf("'  .--./|  '--'  ||  | |  ||  |) /_ \n");
+  printf("|  |    |  .--.  ||  | |  ||  .-.  \\ \n");
+  printf("'  '--'\\|  |  |  |'  '-'  '|  '--' / \n");
+  printf(" `-----'`--'  `--' `-----' `------'\n");
+  printf("I didn't realize it said chub (maybe it should have been C_Hub)\n");
+  printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \n");
+  printf("\n\nType 'login' to login to your account or 'create' to create an account \n");
+  char * choice;
+  int logging_in = 1;
+  while(logging_in){
+    choice = chub_read();
+    if(!strncmp("login", choice, 5)) {
+
+
+	//THIS CODE MUST BE MODIFIED TO CHECK TO MAKE SURE THE USERNAME EXISTS AND THE PASSWORD CORESPONDS
+
+
+      char * username;
+      printf("Please type your username:\n");
+      int waiting = 1;
+      while(waiting){
+	username = chub_read();
+	if(strlen(username) > 0){
+	  waiting = 0;
+	}
+      }
+      printf("Please type your password:\n");
+      waiting = 1;
+      char * password;
+       while(waiting){
+	password = chub_read();
+	if(strlen(password) > 0){
+	  waiting = 0;
+	}
+      }
+    }else if(!strncmp("create", choice, 6)){
+
+
+	//THIS CODE MUST BE MODIFIED TO CHECK IF THE USERNAME ALREADY EXISTS
+
+
+      char * username;
+      printf("Please type your new account username:\n");
+      int waiting = 1;
+      while(waiting){
+	username = chub_read();
+	if(strlen(username) > 0){
+	  waiting = 0;
+	}
+      }
+      printf("Please type your password for this new account:\n");
+      waiting = 1;
+      char * password;
+      char * confirm;
+       while(waiting){
+	password = chub_read();
+	if(strlen(password) > 0){
+	  printf("Please confirm your password:\n");
+	  while(waiting){
+	    confirm = chub_read;
+	    if(!strcmp(password, confirm)){
+	      printf("Account created\n");
+	      waiting = 0;
+	    }
+	  }
+	}
+       }
+    }
+    logging_in = 0;
+  }
+}
+
+
+int chub_functions(char ** args){
+  if(!args[0]){
+    return 0;
+  }
+  int x = 0;
+  while(args[x]){
+    char ** func = chub_parse(args[x], " ");
+    if (!strncmp("chub", func[0], 4)){
+      chub_operations(func);
+    }
+    if (!strncmp("exit", func[0], 4)){
+      exit(USER_EXIT);
+    }else if (!strncmp("cd", func[0], 2)){
+      chdir(func[1]);
+    }else{
+    int parent = fork();
+    if (!parent){
+      if(execvp(func[0], func) == -1){
+        printf("error: incorrect input\n");
+        free(func);
+        exit(NO_ARGS);
+      }else{
+        execvp(func[0], func);
+        //execvp(args[0], args);
+        exit(0);
+      }
+    }else{
+      int status;
+      wait(&status);
+    }
+  }
+    x++;
+    free(func);
+  }
+  return 1;
+}
+
+*/
 int main(int argc, char **argv) {
 
   int server_socket;
@@ -104,7 +259,7 @@ int main(int argc, char **argv) {
     printf("Connection refused. Try again.\n");
     exit(0);
     }*/
-  
+
   fd_set read_fds;
 
   if (argc == 2)
