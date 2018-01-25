@@ -69,22 +69,19 @@ int file_receive_c(char *FILENAME, int client_socket){
   file_size = atoi(buffer);
   printf("stuff here\n");
   //fprintf(stdout, "\nFile size : %d\n", file_size);
-
   received_file = fopen(FILENAME, "w");
-  if (received_file == NULL)
-    {
+  if (received_file == NULL){
       // printf("Failed to open file.\n");
       fprintf(stderr, "Failed to open file foo --> %s\n", strerror(errno));
-
       exit(EXIT_FAILURE);
     }
-
   remain_data = file_size;
 
   while (((len = recv(client_socket, buffer, BUFSIZ, 0)) > 0) && (remain_data > 0))
     {
       fwrite(buffer, sizeof(char), len, received_file);
       remain_data -= len;
+      printf("Client received file named: %s \n", parsed[1]);
       //fprintf(stdout, "Receive %d bytes and we hope :- %d bytes\n", len, remain_data);
     }
 }
@@ -180,24 +177,23 @@ int parse_s(char buffer[], int client_socket){
     ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(exists){
-	  // printf("stuff\n");
-	  file_send_c(parsed[1], client_socket);
-	  printf("Sent file named: %s \n", parsed[1]);
-	  file_receive_c(parsed[1], client_socket);
-	  printf("Client received file named: %s \n", parsed[1]);
-	  return 1;
-	}
-	else{
-	  printf("Repository doesn't exist. Unable to clone.\n");
-	    }
+        int exists=repo_checker_s(parsed[1]);
+        if(exists){
+          printf("stuff\n");
+	        file_send_c(parsed[1], client_socket);
+	        printf("Sent file named: %s \n", parsed[1]);
+	        file_receive_c(parsed[1], client_socket);
+
+          return 1;
+        }else{
+          printf("Repository doesn't exist. Unable to clone.\n");
+        }
       }
     }
-  printf("Something went wrong... please try again.\n");
-  return 0;
-}
+    printf("Something went wrong... please try again.\n");
+    return 0;
   }
+}
 
 int main() {
 
