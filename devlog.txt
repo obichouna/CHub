@@ -17,3 +17,6 @@ setup server client connection. can check if repo exists
 
 dariaS -- 2018-01-24 22:01:06
 You can create repos.
+angelicaZ -- 2018-01-25 11:27:35
+made remove function but not tested yet, in repo.c
+
