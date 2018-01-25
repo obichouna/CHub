@@ -16,3 +16,6 @@ added header, going to move around all functions to networking because it requir
 dariaS -- 2018-01-24 21:35:23
 setup server client connection. can check if repo exists
 
+dariaS -- 2018-01-24 22:01:06
+You can create repos.
+
