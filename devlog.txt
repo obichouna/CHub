@@ -17,3 +17,6 @@ setup server client connection. can check if repo exists
 
 dariaS -- 2018-01-24 22:01:06
 You can create repos.
+dariaS -- 2018-01-25 11:01:26
+Server client connection established. Can connect any client to the server using the server's IP address 149.89.150.128. You can type in 'create' + repo name to create a repo on the server side. Was in the process of working on cloning. So far seems like server can send the file to client but the client can't copy it. Crashing on 2nd line or so.
+
