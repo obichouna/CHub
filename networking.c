@@ -67,6 +67,26 @@ int server_connect(int sd) {
   return client_socket;
 }
 
+
+int client_connect( char *host ) {
+  int sd, i;
+  
+  sd = socket( AF_INET, SOCK_STREAM, 0 );
+  error_check( sd, "client socket" );
+  
+  struct sockaddr_in sock;
+  sock.sin_family = AF_INET;
+  inet_aton( host, &(sock.sin_addr));
+  sock.sin_port = htons(9002);
+  
+  printf("[client] connecting to: %s\n", host );
+  i = connect( sd, (struct sockaddr *)&sock, sizeof(sock) );
+  error_check( i, "client connect");
+  
+  //connection_descript = sd;
+  
+  return sd;
+}
 /*=========================
   client_setup
   args: int * to_server

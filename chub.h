@@ -75,7 +75,7 @@ void chub_initiate(){
       /*
 
 	THIS CODE MUST BE MODIFIED TO CHECK TO MAKE SURE THE USERNAME EXISTS AND THE PASSWORD CORESPONDS
-
+	
        */
       char * username;
       printf("Please type your username:\n");
@@ -177,8 +177,8 @@ int repo_checker_s(char * name){
   return 1;
 
   //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists
-
+  //returns 0 if doesnt exist and 1 if it exists 
+  
 }
 
 int file_send_c(char *name){
@@ -353,7 +353,7 @@ int chub_operations(char ** func){
       if(func[2] && repo_checker_s(func[2])){
       //How this will work is that the server checks if it has a repo
       //under "repo_name" and if it does, it will make a repository on the client's machine
-      // if it doesnt it will return an error that the repository does not exist
+      // if it doesnt it will return an error that the repository does not exist 
       printf("Cloning %s repository into directory \n", repo_name);
       }
       else{
@@ -382,14 +382,14 @@ int chub_operations(char ** func){
       if(func[2] && repo_checker_s(func[2])){
         //checks if the repo exists on the server
 	//deletes repo on server
-	//recreates it based on client
+	//recreates it based on client 
       }
       else{
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
-
-
-
+    
+    
+  
 }
 
 

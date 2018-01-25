@@ -6,3 +6,14 @@ fixed networking files to allow server-client connection
 
 othmanB -- 2018-01-16 11:52:20
 Worked on logging in and initiation, requires servers to hold data
+
+
+othmanB -- 2018-01-19 11:48:10
+added header, going to move around all functions to networking because it requires server and client interaction
+
+
+dariaS -- 2018-01-24 21:35:23
+setup server client connection. can check if repo exists
+
+dariaS -- 2018-01-24 22:01:06
+You can create repos.
