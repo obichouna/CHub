@@ -15,9 +15,9 @@
 #include <string.h>
 #include "networking.h"
 #include "chub_headers.h"
-
+#include <ftw.h>
 #include "networking.h"
-
+#define _XOPEN_SOURCE 500
 #define MEM_ERR 42
 #define BUFFER_LENGTH 256
 
@@ -168,7 +168,7 @@ int parse_s(char buffer[], int client_socket){
         if(exists){
           // printf("stuff\n");
           //mdir(parsed[1], 0666);
-          nftw(path, unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
+          nftw(parsed[1], unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
           printf("Deleted repository named: %s \n", parsed[1]);
 	        return 1;
         }
