@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
 
   while (1) {
 
-    printf("enter data: ");
+    printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
     //flush the buffer to immediately print
     fflush(stdout);
