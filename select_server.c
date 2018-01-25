@@ -81,7 +81,7 @@ int file_receive_c(char *FILENAME, int client_socket){
     {
       fwrite(buffer, sizeof(char), len, received_file);
       remain_data -= len;
-      printf("Client received file named: %s \n", parsed[1]);
+      printf("Client received file named: %s \n", FILENAME);
       //fprintf(stdout, "Receive %d bytes and we hope :- %d bytes\n", len, remain_data);
     }
 }
