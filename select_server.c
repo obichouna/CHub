@@ -20,9 +20,9 @@ int repo_checker_s(char * name){
   if(fs == NULL)
     {
       printf("ERROR: File %s not found.\n", name);
-      exit(1);
+      return 0;
     }
-
+  return 1;
   //checks if repo exists on the server
   //returns 0 if doesnt exist and 1 if it exists 
   
@@ -51,6 +51,7 @@ int parse_s(char buffer[]){
       if(parsed[1]){
 	int exists=repo_checker_s(parsed[1]);
 	if(!exists){
+	  // printf("stuff\n");
 	  mkdir(parsed[1], 0666);
 	  printf("Created repository named: %s \n", parsed[1]);
 	  return 1;
