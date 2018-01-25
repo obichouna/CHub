@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
   if (argc == 2)
     server_socket = client_setup( buffer0);
-    else
+  else
     server_socket = client_setup( TEST_IP );
 
   while (1) {
