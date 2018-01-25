@@ -115,6 +115,7 @@ int main(int argc, char **argv) {
   while (1) {
 
     printf("enter data: ");
+    parse_c(buffer, server_socket);
     //the above printf does not have \n
     //flush the buffer to immediately print
     fflush(stdout);
@@ -133,7 +134,7 @@ int main(int argc, char **argv) {
       *strchr(buffer, '\n') = 0;
       write(server_socket, buffer, sizeof(buffer));
       read(server_socket, buffer, sizeof(buffer));
-      parse_c(buffer, server_socket);
+      //parse_c(buffer, server_socket);
       printf("received: [%s]\n", buffer);
       //  if (strcmp(buffer,"[clone]")):
     }//end stdin select
