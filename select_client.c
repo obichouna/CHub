@@ -268,8 +268,8 @@ int main(int argc, char **argv) {
     server_socket = client_setup( buffer0);
 
   while (1) {
-
-    printf("Would you like to get a file from server?\n");
+    printf("please enter data: \n");
+    //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
     //flush the buffer to immediately print
     fflush(stdout);

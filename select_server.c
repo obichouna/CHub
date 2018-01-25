@@ -104,13 +104,13 @@ int parse_s(char buffer[], int client_socket){
   if(parsed[0]){
     
     ///for creating repo on server
-    if(!strncmp(parsed[0], "FILE", 5)){
+    /*   if(!strncmp(parsed[0], "FILE", 5)){
       //printf("HI YO\n");
       write(client_socket, "1", sizeof("1")); //responds to client
       
       read(client_socket, file, sizeof(file)); //receives file name
        printf("[Server]: received [%s]\n", file);
-    }
+       }*/
     if(!strncmp("create", parsed[0], 5)){
       if(parsed[1]){
         int exists=repo_checker_s(parsed[1]);
