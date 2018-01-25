@@ -181,7 +181,8 @@ int repo_checker_s(char * name){
   
 }
 
-int file_send_c(char *name){
+int file_send_c(char *filename){
+  FILE * name = fopen(filename, "w+");
   unsigned long fsize;
   if(repo_checker_c){
     printf("found file %s\n", filename);

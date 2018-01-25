@@ -28,6 +28,15 @@ int repo_checker_s(char * name){
   
 }
 
+int repo_checker_c(char *name){
+  FILE *fs = fopen(name, "r");
+  if(fs == NULL)
+    {
+      printf("ERROR: File %s not found.\n", name);
+      exit(1);
+    }
+}
+
 char ** chub_parse(char * line, char * arg){
 
   char **args = (char**)calloc(64, sizeof(char *));
@@ -40,7 +49,50 @@ char ** chub_parse(char * line, char * arg){
   return args;
 }
 
-int parse_s(char buffer[]){
+int file_send_c(char *filename, int sockfd){
+  char buffer[BUFFER_SIZE];
+  FILE * name = fopen(filename, "w+");
+  unsigned long fsize;
+  if(repo_checker_c){
+    printf("found file %s\n", filename);
+    fseek(name, 0, SEEK_END);
+    fsize = ftell(name);
+    rewind(name);
+
+    printf("file contains %ld bytes\n", fsize);
+    printf("sending file");
+
+    while (1){
+      int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
+      if (bytes_read == 0) // done reading file
+	break;
+      if (bytes_read < 0) 
+	{
+      printf("problem reading from file\n"); 
+	}
+      //write will return how many bytes were written.
+      // p keeps track of where in the buffer we are,
+      //bytes_read to keep track of how many bytes are left to write.
+      void *p = buffer;
+      while (bytes_read > 0) 
+	{
+        int bytes_written = write(sockfd, buffer, bytes_read);
+        if (bytes_written <= 0) 
+        {
+            printf("ERROR writing to socket\n");
+        }
+        bytes_read -= bytes_written;
+        p += bytes_written;
+	}
+    }
+    printf("file sent\n");
+    return 0;
+ }
+ return 1; 
+
+}
+
+int parse_s(char buffer[], int client_socket){
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
   char **parsed; 
@@ -59,10 +111,24 @@ int parse_s(char buffer[]){
 	printf("Repository with that name already exists. Could not create. \n");
       }
     }
-  }
+    if(!strncmp("clone", parsed[0], 5)){
+      if(parsed[1]){
+	int exists=repo_checker_s(parsed[1]);
+	if(exists){
+	  // printf("stuff\n");
+	  file_send_c(parsed[1], client_socket);
+	  printf("Copied repository named: %s \n", parsed[1]);
+	  return 1;
+	}
+	else{
+	  printf("Repository doesn't exist. Unable to clone.\n");
+	    }
+      }
+    }
   printf("Something went wrong... please try again.\n");
   return 0;
 }
+  }
 
 int main() {
 
@@ -119,7 +185,7 @@ void subserver(int client_socket) {
 
   while (read(client_socket, buffer, sizeof(buffer))) {
 
-    parse_s(buffer);
+    parse_s(buffer, client_socket);
     printf("[subserver %d] received: [%s]\n", getpid(), buffer);
     process(buffer);
     write(client_socket, buffer, sizeof(buffer));
