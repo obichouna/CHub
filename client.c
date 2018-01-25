@@ -44,6 +44,19 @@ int main(int argc, char **argv) {
   int server_socket;
   char buffer[BUFFER_SIZE];
 
+  printf("Type the IP address of the server you want to connect to.\n");
+  char * buffer0 = calloc(1024,sizeof(char));
+  fgets(buffer0, 1024, stdin);
+  char * newline = strchr(buffer0,'\n');
+  *newline = 0;
+
+  int sd = client_connect(buffer0);
+
+  if (sd == -1) {
+    printf("Connection refused. Try again.\n");
+    exit(0);
+  }
+
   if (argc == 2)
     server_socket = client_setup( argv[1]);
   else
