@@ -75,7 +75,7 @@ void chub_initiate(){
       /*
 
 	THIS CODE MUST BE MODIFIED TO CHECK TO MAKE SURE THE USERNAME EXISTS AND THE PASSWORD CORESPONDS
-	
+
        */
       char * username;
       printf("Please type your username:\n");
@@ -177,8 +177,8 @@ int repo_checker_s(char * name){
   return 1;
 
   //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists 
-  
+  //returns 0 if doesnt exist and 1 if it exists
+
 }
 
 int file_send_c(char *filename){
@@ -197,18 +197,18 @@ int file_send_c(char *filename){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
       if (bytes_read == 0) // done reading file
 	break;
-      if (bytes_read < 0) 
+      if (bytes_read < 0)
 	{
-      printf("problem reading from file\n"); 
+      printf("problem reading from file\n");
 	}
       //write will return how many bytes were written.
       // p keeps track of where in the buffer we are,
       //bytes_read to keep track of how many bytes are left to write.
       void *p = buffer;
-      while (bytes_read > 0) 
+      while (bytes_read > 0)
 	{
         int bytes_written = write(sockfd, buffer, bytes_read);
-        if (bytes_written <= 0) 
+        if (bytes_written <= 0)
         {
             error("ERROR writing to socket\n");
         }
@@ -219,7 +219,7 @@ int file_send_c(char *filename){
     printf("file sent\n");
     return 0;
  }
- return 1; 
+ return 1;
 
 }
 
@@ -238,18 +238,18 @@ int file_send_s(char *name){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
       if (bytes_read == 0) // done reading file
 	break;
-      if (bytes_read < 0) 
+      if (bytes_read < 0)
 	{
-      printf("problem reading from file\n"); 
+      printf("problem reading from file\n");
 	}
       //write will return how many bytes were written.
       // p keeps track of where in the buffer we are,
       //bytes_read to keep track of how many bytes are left to write.
       void *p = buffer;
-      while (bytes_read > 0) 
+      while (bytes_read > 0)
 	{
         int bytes_written = write(sockfd, buffer, bytes_read);
-        if (bytes_written <= 0) 
+        if (bytes_written <= 0)
         {
             error("ERROR writing to socket\n");
         }
@@ -260,7 +260,7 @@ int file_send_s(char *name){
     printf("file sent\n");
     return 0;
  }
- return 1; 
+ return 1;
 
 }
 
@@ -268,7 +268,7 @@ int file_send_s(char *name){
 int parse_s(int client_socket){
   char buffer[BUFFER_LENGTH +1];
   buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
+  char **parsed;
   read(client_socket, buffer, BUFFER_LENGTH);
   chub_parse(buffer, parsed);
   if(parsed[0]){
@@ -287,12 +287,10 @@ int parse_s(int client_socket){
   printf("Something went wrong... please try again.\n");
   return 0;
 }
- 
-//returns 1 if succeeded and 0 if failed. 
 
-	  
-	    
-        
+//returns 1 if succeeded and 0 if failed.
+
+
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -302,16 +300,18 @@ int repo_checker_s(char * name){
     }
 
   //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists 
-  
+  //returns 0 if doesnt exist and 1 if it exists
+
 }
 
 
 int repo_delete_s(char *name){
 }
+
+
 int create_c(int server_socket, char *name){
   char buffer[BUFFER_LENGTH];
-  sprintf(buffer, "create %s ", name); 
+  sprintf(buffer, "create %s ", name);
   write(server_socket,buffer,BUFFER_LENGTH);
   read(server_socket,buffer, 1);
   if(buffer[0]){
@@ -354,7 +354,7 @@ int chub_operations(char ** func){
       if(func[2] && repo_checker_s(func[2])){
       //How this will work is that the server checks if it has a repo
       //under "repo_name" and if it does, it will make a repository on the client's machine
-      // if it doesnt it will return an error that the repository does not exist 
+      // if it doesnt it will return an error that the repository does not exist
       printf("Cloning %s repository into directory \n", repo_name);
       }
       else{
@@ -383,14 +383,14 @@ int chub_operations(char ** func){
       if(func[2] && repo_checker_s(func[2])){
         //checks if the repo exists on the server
 	//deletes repo on server
-	//recreates it based on client 
+	//recreates it based on client
       }
       else{
 	printf("Error: Repo does not exist, check to make sure you're typing the correct name or create the repo\n");
       }
-    
-    
-  
+
+
+
 }
 
 
