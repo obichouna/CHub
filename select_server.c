@@ -94,7 +94,7 @@ int file_receive_c(char *FILENAME, int sockfd){
 
 int file_send_c(char *filename, int sockfd){
   char buffer[BUFFER_SIZE];
-  FILE * name = fopen(filename, "w+");
+  FILE * name = fopen(filename, "r");
   unsigned long fsize;
   if(repo_checker_c){
     printf("found file %s\n", filename);
