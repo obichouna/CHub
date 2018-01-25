@@ -24,8 +24,8 @@ int repo_checker_s(char * name){
     }
   return 1;
   //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists 
-  
+  //returns 0 if doesnt exist and 1 if it exists
+
 }
 
 int repo_checker_c(char *name){
@@ -51,7 +51,7 @@ char ** chub_parse(char * line, char * arg){
 
 int file_receive_c(char *FILENAME, int client_socket){
   char buffer[BUFFER_SIZE];
-  ssize_t len;	
+  ssize_t len;
   int file_size;
   FILE *received_file;
   int remain_data = 0;
@@ -97,18 +97,18 @@ int file_send_c(char *filename, int sockfd){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
       if (bytes_read == 0) // done reading file
 	break;
-      if (bytes_read < 0) 
+      if (bytes_read < 0)
 	{
-      printf("problem reading from file\n"); 
+      printf("problem reading from file\n");
 	}
       //write will return how many bytes were written.
       // p keeps track of where in the buffer we are,
       //bytes_read to keep track of how many bytes are left to write.
       void *p = buffer;
-      while (bytes_read > 0) 
+      while (bytes_read > 0)
 	{
         int bytes_written = write(sockfd, buffer, bytes_read);
-        if (bytes_written <= 0) 
+        if (bytes_written <= 0)
         {
             printf("ERROR writing to socket\n");
         }
@@ -119,44 +119,54 @@ int file_send_c(char *filename, int sockfd){
     printf("file sent\n");
     return 0;
  }
- return 1; 
+ return 1;
 
+}
+
+//angelica
+int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
+    int rv = remove(fpath);
+    if (rv)
+        perror(fpath);
+    return rv;
 }
 
 int parse_s(char buffer[], int client_socket){
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
+  char **parsed;
   // read(client_socket, buffer, BUFFER_LENGTH);
   parsed = chub_parse(buffer, " ");
   if(parsed[0]){
     ///for creating repo on server
     if(!strncmp("create", parsed[0], 5)){
       if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(!exists){
-	  // printf("stuff\n");
-	  mkdir(parsed[1], 0666);
-	  printf("Created repository named: %s \n", parsed[1]);
-	  return 1;
-	}
-	printf("Repository with that name already exists. Could not create. \n");
+        int exists=repo_checker_s(parsed[1]);
+	      if(!exists){
+          // printf("stuff\n");
+          mkdir(parsed[1], 0666);
+          printf("Created repository named: %s \n", parsed[1]);
+          return 1;
+	       }
+	        printf("Repository with that name already exists. Could not create. \n");
       }
     }
 
     ///for removing dir code
     if(!strncmp("remove", parsed[0], 5)){
       if(parsed[1]){
-	int exists=repo_checker_s(parsed[1]);
-	if(exists){
-	  // printf("stuff\n");
-	  rmdir(parsed[1], 0666);
-	  printf("Deleted repository named: %s \n", parsed[1]);
-	  return 1;
-	}
-	printf("Repository with that name does not exist. Could not delete. \n");
+        int exists=repo_checker_s(parsed[1]);
+        if(exists){
+          // printf("stuff\n");
+          //mdir(parsed[1], 0666);
+          nftw(path, unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
+          printf("Deleted repository named: %s \n", parsed[1]);
+	        return 1;
+        }
+        printf("Repository with that name does not exist. Could not delete. \n");
       }
     }
+
 
     ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
