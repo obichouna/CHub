@@ -39,15 +39,6 @@ int repo_checker_s(char * name){
 
 }
 
-int repo_checker_c(char *name){
-  FILE *fs = fopen(name, "r");
-  if(fs == NULL)
-    {
-      printf("ERROR: File %s not found.\n", name);
-      exit(1);
-    }
-}
-
 char ** chub_parse(char * line, char * arg){
 
   char **args = (char**)calloc(64, sizeof(char *));
@@ -138,6 +129,7 @@ int parse_s(char buffer[], int client_socket){
         }else{
           printf("Repository doesn't exist. Unable to clone.\n");
         }
+
       }
     }
     printf("Something went wrong... please try again.\n");
@@ -218,66 +210,3 @@ void process(char * s) {
     s++;
   }
 }
-
-
-
-
-/*
-//angelica
-int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
-    int rv = remove(fpath);
-    if (rv)
-        perror(fpath);
-    return rv;
-}
-*/
-
-    /* 
-    ///for removing dir code
-    if(!strncmp("remove", parsed[0], 5)){
-      if(parsed[1]){
-        int exists=repo_checker_s(parsed[1]);
-        if(exists){
-          // printf("stuff\n");
-          //mdir(parsed[1], 0666);
-          nftw(parsed[1], unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
-          printf("Deleted repository named: %s \n", parsed[1]);
-	  return 1;
-        }
-        printf("Repository with that name does not exist. Could not delete. \n");
-      }
-    }
-    */
-
-
-/*  int file_receive_c(char *FILENAME, int sockfd){
-  char buffer[BUFFER_SIZE];
-  int bytesReceived = 0;
-  FILE *fp;
-  printf("stuff 1\n");
-  fp = fopen("sample_file.txt", "ab");
-  printf("stuff 2\n");
-  if(NULL == fp)
-    {
-      printf("Error opening file");
-      return 1;
-    }
-  printf("stuff 3\n");
-  //Receive data in chunks of 256 bytes 
-  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
-    {
-      printf("stuff 4\n");
-      printf("Bytes received %d\n",bytesReceived);    
-      // recvBuff[n] = 0;
-      fwrite(buffer, 1,bytesReceived,fp);
-      // printf("%s \n", recvBuff);
-    }
-  printf("stuff 5\n");
-  if(bytesReceived < 0)
-    {
-      printf("\n Read Error \n");
-    }
-
-  printf("stuff 6\n");
-  return 0;
-}*/

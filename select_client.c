@@ -35,7 +35,7 @@ int parse_c(char buffer[], int server_socket){
   if(parsed[0]){
     
     ///for creating repo on server
-    if(!strncmp("receiving_file", parsed[0], 5)){
+    if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
         int exists=repo_checker_c(parsed[1]);
 	if(!exists){
