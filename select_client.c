@@ -11,18 +11,18 @@ int main(int argc, char **argv) {
   char * newline = strchr(buffer0,'\n');
   *newline = 0;
 
-  int sd = client_connect(buffer0);
+  // int sd = client_connect(buffer0);
 
-  if (sd == -1) {
+  /*  if (sd == -1) {
     printf("Connection refused. Try again.\n");
     exit(0);
-  }
+    }*/
   
   fd_set read_fds;
 
   if (argc == 2)
-    server_socket = client_setup( argv[1]);
-  else
+    // server_socket = client_setup( argv[1]);
+    //else
     server_socket = client_setup( buffer0 );
 
   while (1) {
