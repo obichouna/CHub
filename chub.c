@@ -196,18 +196,18 @@ int file_send_c(char *name){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
       if (bytes_read == 0) // done reading file
 	break;
-      if (bytes_read < 0) 
+      if (bytes_read < 0)
 	{
-      printf("problem reading from file\n"); 
+      printf("problem reading from file\n");
 	}
       //write will return how many bytes were written.
       // p keeps track of where in the buffer we are,
       //bytes_read to keep track of how many bytes are left to write.
       void *p = buffer;
-      while (bytes_read > 0) 
+      while (bytes_read > 0)
 	{
         int bytes_written = write(sockfd, buffer, bytes_read);
-        if (bytes_written <= 0) 
+        if (bytes_written <= 0)
         {
             error("ERROR writing to socket\n");
         }
@@ -218,7 +218,7 @@ int file_send_c(char *name){
     printf("file sent\n");
     return 0;
  }
- return 1; 
+ return 1;
 
 }
 
@@ -237,18 +237,18 @@ int file_send_s(char *name){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
       if (bytes_read == 0) // done reading file
 	break;
-      if (bytes_read < 0) 
+      if (bytes_read < 0)
 	{
-      printf("problem reading from file\n"); 
+      printf("problem reading from file\n");
 	}
       //write will return how many bytes were written.
       // p keeps track of where in the buffer we are,
       //bytes_read to keep track of how many bytes are left to write.
       void *p = buffer;
-      while (bytes_read > 0) 
+      while (bytes_read > 0)
 	{
         int bytes_written = write(sockfd, buffer, bytes_read);
-        if (bytes_written <= 0) 
+        if (bytes_written <= 0)
         {
             error("ERROR writing to socket\n");
         }
@@ -259,7 +259,7 @@ int file_send_s(char *name){
     printf("file sent\n");
     return 0;
  }
- return 1; 
+ return 1;
 
 }
 
@@ -267,7 +267,7 @@ int file_send_s(char *name){
 int parse_s(int client_socket){
   char buffer[BUFFER_LENGTH +1];
   buffer[BUFFER_LENGTH]=0;
-  char **parsed; 
+  char **parsed;
   read(client_socket, buffer, BUFFER_LENGTH);
   chub_parse(buffer, parsed);
   if(parsed[0]){
@@ -286,12 +286,10 @@ int parse_s(int client_socket){
   printf("Something went wrong... please try again.\n");
   return 0;
 }
- 
-//returns 1 if succeeded and 0 if failed. 
 
-	  
-	    
-        
+//returns 1 if succeeded and 0 if failed.
+
+
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -301,8 +299,8 @@ int repo_checker_s(char * name){
     }
 
   //checks if repo exists on the server
-  //returns 0 if doesnt exist and 1 if it exists 
-  
+  //returns 0 if doesnt exist and 1 if it exists
+
 }
 
 
@@ -310,7 +308,7 @@ int repo_delete_s(char *name){
 }
 int create_c(int server_socket, char *name){
   char buffer[BUFFER_LENGTH];
-  sprintf(buffer, "create %s ", name); 
+  sprintf(buffer, "create %s ", name);
   write(server_socket,buffer,BUFFER_LENGTH);
   read(server_socket,buffer, 1);
   if(buffer[0]){
