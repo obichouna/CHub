@@ -100,10 +100,10 @@ int file_send_c(char *filename, int sockfd){
     printf("found file %s\n", filename);
     fseek(name, 0, SEEK_END);
     fsize = ftell(name);
-    // rewind(name);
+    rewind(name);
 
     printf("file contains %ld bytes\n", fsize);
-    printf("sending file");
+    printf("sending file\n");
 
     while (1){
       int bytes_read = fread(buffer, sizeof(char),BUFFER_LENGTH, name);
