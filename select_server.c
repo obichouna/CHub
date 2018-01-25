@@ -58,9 +58,42 @@ char ** chub_parse(char * line, char * arg){
   return args;
 }
 
-int file_receive_c(char *FILENAME, int client_socket){
+int file_receive_c(char *FILENAME, int sockfd){
   char buffer[BUFFER_SIZE];
-  ssize_t len;
+  int bytesReceived = 0;
+  FILE *fp;
+  fp = fopen("sample_file.txt", "ab"); 
+  if(NULL == fp)
+    {
+      printf("Error opening file");
+      return 1;
+    }
+
+  /* Receive data in chunks of 256 bytes */
+  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
+    {
+      printf("Bytes received %d\n",bytesReceived);    
+      // recvBuff[n] = 0;
+      fwrite(buffer, 1,bytesReceived,fp);
+      // printf("%s \n", recvBuff);
+    }
+
+  if(bytesReceived < 0)
+    {
+      printf("\n Read Error \n");
+    }
+
+
+  return 0;
+
+
+
+
+
+
+
+
+  /* ssize_t len;
   int file_size;
   FILE *received_file;
   int remain_data = 0;
@@ -84,7 +117,7 @@ int file_receive_c(char *FILENAME, int client_socket){
       remain_data -= len;
       printf("Client received file named: %s \n", FILENAME);
       //fprintf(stdout, "Receive %d bytes and we hope :- %d bytes\n", len, remain_data);
-    }
+      }*/
 }
 
 int file_send_c(char *filename, int sockfd){
