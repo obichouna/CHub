@@ -21,3 +21,6 @@ Server client connection established. Can connect any client to the server using
 
 angelicaZ -- 2018-01-25 11:27:35
 made remove function but not tested yet, in repo.c
+angelicaZ -- 2018-01-25 17:43:40
+linked chub/terminal to client side
+
