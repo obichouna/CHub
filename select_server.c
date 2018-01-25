@@ -90,39 +90,6 @@ int file_receive_c(char *FILENAME, int sockfd){
 
   printf("stuff 6\n");
   return 0;
-
-
-
-
-
-
-
-
-  /* ssize_t len;
-  int file_size;
-  FILE *received_file;
-  int remain_data = 0;
-  printf("stuff here\n");
-  recv(client_socket, buffer, BUFFER_SIZE, 0);
-  printf("stuff here 2\n");
-  file_size = atoi(buffer);
-  printf("stuff here 3\n");
-  //fprintf(stdout, "\nFile size : %d\n", file_size);
-  received_file = fopen(FILENAME, "w");
-  if (received_file == NULL){
-      // printf("Failed to open file.\n");
-      fprintf(stderr, "Failed to open file foo --> %s\n", strerror(errno));
-      exit(EXIT_FAILURE);
-    }
-  remain_data = file_size;
-
-  while (((len = recv(client_socket, buffer, BUFSIZ, 0)) > 0) && (remain_data > 0))
-    {
-      fwrite(buffer, sizeof(char), len, received_file);
-      remain_data -= len;
-      printf("Client received file named: %s \n", FILENAME);
-      //fprintf(stdout, "Receive %d bytes and we hope :- %d bytes\n", len, remain_data);
-      }*/
 }
 
 int file_send_c(char *filename, int sockfd){
@@ -133,7 +100,7 @@ int file_send_c(char *filename, int sockfd){
     printf("found file %s\n", filename);
     fseek(name, 0, SEEK_END);
     fsize = ftell(name);
-    rewind(name);
+    // rewind(name);
 
     printf("file contains %ld bytes\n", fsize);
     printf("sending file");
@@ -168,18 +135,6 @@ int file_send_c(char *filename, int sockfd){
 
 }
 
-
-/*
-//angelica
-int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
-    int rv = remove(fpath);
-    if (rv)
-        perror(fpath);
-    return rv;
-}
-*/
-
-
 int parse_s(char buffer[], int client_socket){
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
@@ -187,6 +142,7 @@ int parse_s(char buffer[], int client_socket){
   // read(client_socket, buffer, BUFFER_LENGTH);
   parsed = chub_parse(buffer, " ");
   if(parsed[0]){
+    
     ///for creating repo on server
     if(!strncmp("create", parsed[0], 5)){
       if(parsed[1]){
@@ -200,22 +156,6 @@ int parse_s(char buffer[], int client_socket){
 	printf("Repository with that name already exists. Could not create. \n");
       }
     }
-    /* 
-    ///for removing dir code
-    if(!strncmp("remove", parsed[0], 5)){
-      if(parsed[1]){
-        int exists=repo_checker_s(parsed[1]);
-        if(exists){
-          // printf("stuff\n");
-          //mdir(parsed[1], 0666);
-          nftw(parsed[1], unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
-          printf("Deleted repository named: %s \n", parsed[1]);
-	  return 1;
-        }
-        printf("Repository with that name does not exist. Could not delete. \n");
-      }
-    }
-    */
     ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
@@ -310,3 +250,33 @@ void process(char * s) {
     s++;
   }
 }
+
+
+
+
+/*
+//angelica
+int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
+    int rv = remove(fpath);
+    if (rv)
+        perror(fpath);
+    return rv;
+}
+*/
+
+    /* 
+    ///for removing dir code
+    if(!strncmp("remove", parsed[0], 5)){
+      if(parsed[1]){
+        int exists=repo_checker_s(parsed[1]);
+        if(exists){
+          // printf("stuff\n");
+          //mdir(parsed[1], 0666);
+          nftw(parsed[1], unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
+          printf("Deleted repository named: %s \n", parsed[1]);
+	  return 1;
+        }
+        printf("Repository with that name does not exist. Could not delete. \n");
+      }
+    }
+    */
