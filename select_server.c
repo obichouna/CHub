@@ -129,6 +129,7 @@ int file_send_c(char *filename, int sockfd){
 
 }
 
+/*
 //angelica
 int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf){
     int rv = remove(fpath);
@@ -136,6 +137,8 @@ int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW
         perror(fpath);
     return rv;
 }
+
+*/
 
 int parse_s(char buffer[], int client_socket){
   // char buffer[BUFFER_LENGTH +1];
@@ -157,7 +160,7 @@ int parse_s(char buffer[], int client_socket){
 	        printf("Repository with that name already exists. Could not create. \n");
       }
     }
-
+    /*
     ///for removing dir code
     if(!strncmp("remove", parsed[0], 5)){
       if(parsed[1]){
@@ -172,6 +175,7 @@ int parse_s(char buffer[], int client_socket){
         printf("Repository with that name does not exist. Could not delete. \n");
       }
     }
+    */
 
 
     ///for cloning repo
