@@ -115,7 +115,6 @@ int main(int argc, char **argv) {
   while (1) {
 
     printf("enter data: ");
-    parse_c(buffer, server_socket);
     //the above printf does not have \n
     //flush the buffer to immediately print
     fflush(stdout);
@@ -146,6 +145,7 @@ int main(int argc, char **argv) {
       read(server_socket, buffer, sizeof(buffer));
       printf("[SERVER BROADCAST] [%s]\n", buffer);
       printf("enter data: ");
+      parse_c(buffer, server_socket);
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);
