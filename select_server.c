@@ -57,6 +57,7 @@ int file_receive_c(char *FILENAME, int client_socket){
   int remain_data = 0;
   recv(client_socket, buffer, BUFSIZ, 0);
   file_size = atoi(buffer);
+  printf("stuff here\n");
   //fprintf(stdout, "\nFile size : %d\n", file_size);
 
   received_file = fopen(FILENAME, "w");
@@ -84,10 +85,8 @@ int file_send_c(char *filename, int sockfd){
   unsigned long fsize;
   if(repo_checker_c){
     printf("found file %s\n", filename);
-    printf("stuff\n");
     fseek(name, 0, SEEK_END);
     fsize = ftell(name);
-    //printf("stuff\n");
     rewind(name);
 
     printf("file contains %ld bytes\n", fsize);
