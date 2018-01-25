@@ -49,15 +49,45 @@ char ** chub_parse(char * line, char * arg){
   return args;
 }
 
+int file_receive_c(char *FILENAME, int client_socket){
+  char buffer[BUFFER_SIZE];
+  ssize_t len;	
+  int file_size;
+  FILE *received_file;
+  int remain_data = 0;
+  recv(client_socket, buffer, BUFSIZ, 0);
+  file_size = atoi(buffer);
+  //fprintf(stdout, "\nFile size : %d\n", file_size);
+
+  received_file = fopen(FILENAME, "w");
+  if (received_file == NULL)
+    {
+      // printf("Failed to open file.\n");
+      fprintf(stderr, "Failed to open file foo --> %s\n", strerror(errno));
+
+      exit(EXIT_FAILURE);
+    }
+
+  remain_data = file_size;
+
+  while (((len = recv(client_socket, buffer, BUFSIZ, 0)) > 0) && (remain_data > 0))
+    {
+      fwrite(buffer, sizeof(char), len, received_file);
+      remain_data -= len;
+      fprintf(stdout, "Receive %d bytes and we hope :- %d bytes\n", len, remain_data);
+    }
+}
+
 int file_send_c(char *filename, int sockfd){
   char buffer[BUFFER_SIZE];
   FILE * name = fopen(filename, "w+");
   unsigned long fsize;
   if(repo_checker_c){
     printf("found file %s\n", filename);
+    printf("stuff\n");
     fseek(name, 0, SEEK_END);
     fsize = ftell(name);
-    printf("stuff\n");
+    //printf("stuff\n");
     rewind(name);
 
     printf("file contains %ld bytes\n", fsize);
