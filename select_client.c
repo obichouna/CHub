@@ -301,7 +301,7 @@ int main(int argc, char **argv) {
      server_socket = client_setup( buffer);
 
     int i = 1;
-   while (1) {
+   while (i) {
      printf("What would you like to do? Type 'clone' or 'create'.\n");
      //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
@@ -329,6 +329,7 @@ int main(int argc, char **argv) {
 	       close(fd);
          printf("Pulled from server to client\n"); //file,filePath);
        }
+       i = 0;
      }
 
     fflush(stdout);
@@ -360,6 +361,7 @@ int main(int argc, char **argv) {
         //flush the buffer to immediately print
         fflush(stdout);
       }//end socket select
+      i = 0;
     }
   }//end loop
 }
