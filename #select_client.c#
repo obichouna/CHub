@@ -1,23 +1,13 @@
 #include "networking.h"
-#include <time.h>
 //#include "chub_headers.h"
 //#define MEM_ERR 42
-//#define BUFFER_LENGTH 256
-
+#define BUFFER_LEN 256
+#define FILE_LEN 32768
 int file_receive_c(char *FILENAME, int sockfd);
 char ** chub_parse(char * line, char * arg);
 int repo_checker_c(char *name);
 int parse_c(char buffer[], int server_socket);
-
-int null_bytes(char* s){
-    char * nul_pos = strchr(s,'\0');
-    //checks if NULL is actually in the string
-    if(nul_pos != NULL)
-        return sizeof(char)* (int)(nul_pos - s);
-    else
-        return sizeof(char)*PACKET_SIZE;
-}
-
+/*
 char ** chub_parse(char * line, char * arg){
 
   char **args = (char**)calloc(64, sizeof(char *));
@@ -29,16 +19,16 @@ char ** chub_parse(char * line, char * arg){
 
   return args;
 }
-
+*/
 int repo_checker_c(char *name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
     {
       printf("ERROR: File %s not found.\n", name);
-      return 0;
+      exit(1);
     }
-  return 1;
 }
+/*
 int parse_c(char buffer[], int server_socket){
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
@@ -65,9 +55,9 @@ int parse_c(char buffer[], int server_socket){
     printf("Something went wrong... please try again.\n");
     return 0;
   }
-  return 1;
 }
-
+*/
+/*
 int file_receive_c(char * FILENAME, int sockfd){
   char buffer[BUFFER_SIZE];
   int bytesReceived = 0;
@@ -82,7 +72,7 @@ int file_receive_c(char * FILENAME, int sockfd){
     }
   printf("stuff 3\n");
   /* Receive data in chunks of 256 bytes */
-  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
+/* while((bytesReceived = read(sockfd, buffer, 256)) > 0)
     {
       printf("stuff 4\n");
       printf("Bytes received %d\n",bytesReceived);
@@ -99,6 +89,7 @@ int file_receive_c(char * FILENAME, int sockfd){
   printf("stuff 6\n");
   return 0;
 }
+*/
 
 void chub(){
   //The main loop - Reads from stdin, parses, and runs arguments
@@ -215,7 +206,7 @@ void chub_initiate(){
 }
 
 
-int chub_functions(char ** args){
+/* int chub_functions(char ** args){
   if(!args[0]){
     return 0;
   }
@@ -252,124 +243,134 @@ int chub_functions(char ** args){
   return 1;
 }
 
-//waits for message from server
-int serv_response(char * message, int server_socket){
-    char buffer[BUFFER_SIZE];
+*/
+
+int file_length(char * s){
+    char * isnull = strchr(s,'\0');
+    if(isnull == NULL){
+      return sizeof((char)FILE_LEN);
+    }
+    return sizeof((char)((int)(isnull - s)));
+}
+
+//returns number of bytes till null so not huge fileee
+
+
+int wait_c(char * message, int server_socket){
+    char buffer[BUFFER_LEN];
     while(strcmp(buffer,message)) {
         read(server_socket, buffer, sizeof(buffer));
 
         //if it gets error message instead of confirmation
-        if(strstr(buffer,ERROR_RESPONSE)) {
-            write(server_socket, ERROR_WAIT, sizeof(ERROR_WAIT));
-            read(server_socket, buffer, sizeof(buffer)); //reading follow up error message
-            printf("%s",buffer);
+        if(strncmp(buffer,"error", 5)) {
+            printf("Something went wrong... Please try again.\n");
             return -1;
         }
     }
     return 0;
 }
+//waits until it receive message from server
+//returns -1 if error
+//returns 0 if worked
 
-int create (int server_socket, char * buffer ) {
-  fd_set read_fds;
-  while (1) {
-    printf("please enter data: \n");
-    fflush(stdout);
-    FD_ZERO(&read_fds);
-    FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
-    FD_SET(server_socket, &read_fds); //add socket to fd set
-
-    //select will block until either fd is ready
-    select(server_socket + 1, &read_fds, NULL, NULL, NULL);
-
-    if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-        fgets(buffer, sizeof(buffer), stdin);
-        *strchr(buffer, '\n') = 0;
-        write(server_socket, buffer, sizeof(buffer));
-        read(server_socket, buffer, sizeof(buffer));
-        //parse_c(buffer, server_socket);
-        printf("received: [%s]\n", buffer);
-        //  if (strcmp(buffer,"[clone]")):
-      }//end stdin select
-
-      if (FD_ISSET(server_socket, &read_fds)) {
-        read(server_socket, buffer, sizeof(buffer));
-        printf("[SERVER BROADCAST] [%s]\n", buffer);
-        printf("enter data: ");
-        parse_c(buffer, server_socket);
-        //the above printf does not have \n
-        //flush the buffer to immediately print
-        fflush(stdout);
-      }//end socket select
-    }//end loop
+void which_file(int server_socket){
+   char * file;
+   printf("\n Please type the name of file: ");
+   int waiting = 1;
+   while(waiting){
+   fgets(file, sizeof(file), stdin);
+   //*strchr(file, '\n') = 0;
+   if(strlen(file) > 0){
+     write(server_socket, file, sizeof(file));
+     waiting = 0;
+   }
+ }
+}
+//asks which file you want to do the operation with and then sends that info to the server!
+int chub_operations(char * func, int server_socket){
+  char fileStuff[FILE_LEN];
+  char path[BUFFER_LEN];
+  if(!strcmp("pull",func)){
+  //first: tell it to pull
+  write(server_socket, "pull", 4);
+  wait_c("1", server_socket);
+  //second: tell it file
+  which_file(server_socket);
+    if(!wait_c("2", server_socket)){
+      //third: receive file
+      write(server_socket, "3", 1);
+      read(server_socket, fileStuff, sizeof(fileStuff));
+      //fourth: place to store
+      printf("\n Please type the path to where you want your file stored:\n ");
+      fgets(path, sizeof(path), stdin);
+      *strchr(path, '\n') = 0;
+      int fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0664);
+      //fifth: create file
+      write(fd, fileStuff, file_length(fileStuff));
+      close(fd);
+      printf("successful pull!");
+    }
   }
+  if(!strcmp("push",func)){
+  // first: tell it to push
+  write(server_socket, "push", 4); //push request sent
+  wait_c("1", server_socket);
+  //second: tell it file
+  which_file(server_socket);
+  if(!wait_c("2", server_socket)){
+    printf("\nPlease type the path to your file: \n");
+    fgets(path, sizeof(path), stdin);
+    *strchr(path, '\n') = 0;
+    //third: copy file contents
+    int fd;
+    if ((fd = open(path, O_RDONLY)) < 0){
+      read(fd, fileStuff, sizeof(fileStuff));
+      close(fd);
+      //fourth:send file
+      write(server_socket, fileStuff, file_length(fileStuff));
+      printf("successful push!");
+    }
+    else{
+      printf("something went wrong...\n");
+    }
+  }
+}
+}
 
-int chub_operations(char ** func){}
 
 int main(int argc, char **argv) {
 
   int server_socket;
   char buffer[BUFFER_SIZE];
-  char file[BUFFER_SIZE]; //packet size is max size of file we r sending
-  char fcontent[PACKET_SIZE];
-  char res[BUFFER_SIZE];
-  chub_initiate();
+
+  //chub_initiate();
+  //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
-   //char * buffer0 = calloc(1024,sizeof(char));
-   memset(buffer, 0, sizeof(buffer));
-   fgets(buffer, 1024, stdin);
-   char * newline = strchr(buffer,'\n');
-   *newline = 0;
+  char * buffer0 = calloc(1024,sizeof(char));
+  fgets(buffer0, 1024, stdin);
+  char * newline = strchr(buffer0,'\n');
+  *newline = 0;
 
+  // int sd = client_connect(buffer0);
 
-   fd_set read_fds;
+  /*  if (sd == -1) {
+    printf("Connection refused. Try again.\n");
+    exit(0);
+    }*/
 
-   if (argc == 2)
-     server_socket = client_setup( argv[1]);
-   else
-     server_socket = client_setup( buffer);
+  fd_set read_fds;
 
-    int i = 1;
-    while (1) {
-     printf("What would you like to do? Type 'clone' or 'create'.\n");
-     //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
-     fgets(res,sizeof(res),stdin);
-     *strchr(res, '\n') = 0;
+  if (argc == 2)
+    server_socket = client_setup( argv[1]);
+  else
+    server_socket = client_setup( buffer0);
 
-
-     
-     //clone is essentially for pulling from another computer
-     if(!strcmp("clone", res)){
-       //printf("in the if part");
-       write(server_socket, "clone", sizeof("clone"));
-       serv_response("1", server_socket);
-       printf("Please enter name of file you're cloning:\n");
-       fgets(file, sizeof(file), stdin);
-       // *strchr('\n', file) = 0;
-       write(server_socket, file, sizeof(file));
-       if(!serv_response("2", server_socket)){
-         memset(fcontent,0,sizeof(fcontent));
-         write(server_socket, "3", sizeof("3"));//responds with a ready to read signal
-         read(server_socket, fcontent, sizeof(fcontent));
-         //storing file contents in client-side file
-         //	printf("\nWhere would you like the file contents to be pulled?(creates new file if one doesnt exist)\n(enter a path to file): ");
-	       //fgets(filePath, sizeof(filePath), stdin);
-	       //	*strchr(filePath, '\n') = 0;
-         int fd = open("sample.txt", O_CREAT|O_WRONLY|O_TRUNC, 0664);
-         //writing into fd up to NULL
-	       write(fd, fcontent, null_bytes(fcontent));
-	       close(fd);
-         printf("Pulled from server to client\n"); //file,filePath);
-       }
-       i = 0;
-     }
-
-     else if(!strcmp("exit","buffer")){
-       printf("Goodbye! Come again.\n");
-       close(server_socket);
-       exit(0);
-     }
-     
+  while (1) {
+    printf("please enter data: \n");
+    //  printf("Would you like to get a file from server?\n");
+    //the above printf does not have \n
+    //flush the buffer to immediately print
     fflush(stdout);
 
     //select() modifies read_fds
@@ -402,14 +403,7 @@ int main(int argc, char **argv) {
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);
-    }
+    }//end socket select
 
-
-
-     //for creating repos on server
-    // if (!strncmp("create", res, 6)){
-
-    //create(server_socket, buffer);
-    //}
   }//end loop
 }
