@@ -331,11 +331,13 @@ int main(int argc, char **argv) {
 
 	printf("Pulled from server to client\n"); //file,filePath);
       }
-      i = 0;
+    i = 0;
     }
+  }
     //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
     //flush the buffer to immediately print
+    while (1) {
     fflush(stdout);
 
     //select() modifies read_fds
