@@ -299,7 +299,7 @@ int main(int argc, char **argv) {
     server_socket = client_setup( buffer);
 
   while (1) {
-    printf("Would you like to pull a file grgr geg e from server? Type 'clone' if so.\n");
+    printf("Would you like to pull a file from server? Type 'clone' if so.\n");
     printf("%d\n" ,strcmp("clone", buffer));
 
     if(!strcmp("clone", buffer)){
