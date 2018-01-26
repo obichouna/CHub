@@ -354,7 +354,6 @@ int main(int argc, char **argv) {
        }
        i = 0;
      }
-
      else if(!strcmp("exit","buffer")){
        printf("Goodbye! Come again.\n");
        close(server_socket);
@@ -395,11 +394,8 @@ int main(int argc, char **argv) {
       fflush(stdout);
     }
 
-
-
      //for creating repos on server
     if (!strncmp("create", res, 6)){
-
     create(server_socket, buffer);
     }
   }//end loop
