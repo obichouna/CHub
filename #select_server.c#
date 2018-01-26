@@ -211,8 +211,6 @@ void chub_operation_s(int client_socket){
       wait_s("3", client_socket);
       write(client_socket, fileStuff, file_length(fileStuff));
       printf("[server]: pulled '%s'\n", file);
-        }
-    
     }
 void subserver(int client_socket) {
   char buffer[BUFFER_SIZE];
