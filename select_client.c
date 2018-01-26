@@ -320,12 +320,6 @@ int main(int argc, char **argv) {
    char * newline = strchr(buffer,'\n');
    *newline = 0;
 
-   // int sd = client_connect(buffer0);
-
-   /*  if (sd == -1) {
-     printf("Connection refused. Try again.\n");
-     exit(0);
-     }*/
 
    fd_set read_fds;
 
@@ -335,7 +329,7 @@ int main(int argc, char **argv) {
      server_socket = client_setup( buffer);
 
     int i = 1;
-   while (i) {
+    while (i) {
      printf("What would you like to do? Type 'clone' or 'create'.\n");
      //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
@@ -374,7 +368,7 @@ int main(int argc, char **argv) {
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
-      create(read_fds, server_socket, buffer);
+      //create(read_fds, server_socket, buffer);
     }
   }//end loop
 }
