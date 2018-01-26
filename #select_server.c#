@@ -146,6 +146,16 @@ int parse_s(char buffer[], int client_socket){
 }
 
 */
+int file_length(char* s){
+    char * isnull = strchr(s,'\0');
+    if(isnull == NULL){
+      return sizeof((char)*FILE_LEN);
+    }
+    return sizeof((char)* (int)(isnull - s));
+}
+      
+//returns number of bytes till null so not huge fileee
+
 void chub_operation_s(int client_socket){
  char buffer[BUFFER_LEN];
  char path [BUFFER_LEN];
@@ -164,37 +174,20 @@ void chub_operation_s(int client_socket){
       //receiving file contents
       read(client_socket, fileStuff, sizeof(fileStuff));
       //writing into fd up to NULL
-       write(fd, fileStuff, num_non_null_bytes(fileContent));
-        close(fd);
-            printf("[Server]: pushed to '%s'\n", file);
-        }
+      write(fd, fileStuff, file_length(fileStuff));
+      close(fd);
+      printf("[server]: successful push of '%s'\n", file);
     }
-    else if(!strcmp(buffer,"PULL") && !logged_in){ //dealing with a pull request
-        write(client_socket, "1", sizeof("1")); //responds to client
-
-        read(client_socket, file, sizeof(file)); //receives file name
-        print_packet(file);
-
-        //file transfer code ***
-        strcpy(filePath, "./fileDir/");
-        strcat(filePath,file);
-        strcat(file, ";"); //adds ; to the end of file name
-
-        int fd = -1;
-        int pull_perm_fd = open("./pull_perm.txt", O_RDONLY, 0664); //to work with pull permissions
-        read(pull_perm_fd, perms_content, sizeof(perms_content));
-        init_file_pos = strstr(perms_content,file); //guaranteed to be file because of ; ending
-        if(!init_file_pos){//if file not found
-            write(client_socket,ERROR_RESPONSE,sizeof(ERROR_RESPONSE));
-            wait_response(ERROR_WAIT,client_socket);
-            write(client_socket,"ERROR: File not found\n",sizeof("ERROR: File not found\n"));
-        }
-        else{//if file found(check pull permissions)
-            strncpy(perm_desc,                      //copy into description of permission...
-                    init_file_pos,     //starting from the beginning of description...
-                    sizeof(char)*(int)(strchr(init_file_pos,'|')-init_file_pos)); //to the end of the description
-            if(strstr(perm_desc,username)){//if username found in permissions
-                fd = open(filePath, O_RDONLY, 0664);
+    else if(!strcmp(buffer,"pull")){
+      write(client_socket, "1", sizeof("1"));
+      //handshake
+      read(client_socket, file, sizeof(file)); //receives file name
+      printf("[server]: received [%s]\n", file);
+      //file transfer code
+      strcpy(path, "./server_files/");
+      strcat(path,file);
+      int fd;
+      fd = open(filePath, O_RDONLY, 0664);
 
 		int sd = semget(hash(file), 1, 0644);
 		struct sembuf temp_sembuf;
