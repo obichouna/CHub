@@ -329,7 +329,7 @@ int main(int argc, char **argv) {
      server_socket = client_setup( buffer);
 
     int i = 1;
-    while (i) {
+    while (1) {
      printf("What would you like to do? Type 'clone' or 'create'.\n");
      //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
@@ -363,6 +363,44 @@ int main(int argc, char **argv) {
        i = 0;
      }
 
+     else if(!strcmp("exit","buffer")){
+       printf("Goodbye! Come again.\n");
+       close(server_socket);
+       exit(0);
+     }
+    fflush(stdout);
+
+    //select() modifies read_fds
+    //we must reset it at each iteration
+    FD_ZERO(&read_fds);
+    FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
+    FD_SET(server_socket, &read_fds); //add socket to fd set
+
+    //select will block until either fd is ready
+    select(server_socket + 1, &read_fds, NULL, NULL, NULL);
+
+    if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+      fgets(buffer, sizeof(buffer), stdin);
+      *strchr(buffer, '\n') = 0;
+      write(server_socket, buffer, sizeof(buffer));
+      read(server_socket, buffer, sizeof(buffer));
+      //parse_c(buffer, server_socket);
+      printf("received: [%s]\n", buffer);
+      //  if (strcmp(buffer,"[clone]")):
+    }//end stdin select
+
+    //currently the server is not set up to
+    //send messages to all the clients, but
+    //this would allow for broadcast messages
+    if (FD_ISSET(server_socket, &read_fds)) {
+      read(server_socket, buffer, sizeof(buffer));
+      printf("[SERVER BROADCAST] [%s]\n", buffer);
+      printf("enter data: ");
+      parse_c(buffer, server_socket);
+      //the above printf does not have \n
+      //flush the buffer to immediately print
+      fflush(stdout);
+    }//end socket select
     //fflush(stdout);
     //select() modifies read_fds
     //we must reset it at each iteration
