@@ -283,7 +283,7 @@ int main(int argc, char **argv) {
    //char * buffer0 = calloc(1024,sizeof(char));
    memset(buffer, 0, sizeof(buffer));
    fgets(buffer, 1024, stdin);
-   char * newline = strchr(buffer0,'\n');
+   char * newline = strchr(buffer,'\n');
    *newline = 0;
 
    // int sd = client_connect(buffer0);
