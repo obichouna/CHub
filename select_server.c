@@ -154,6 +154,7 @@ int parse_s(char buffer[], int client_socket){
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[0]){
         write(client_socket, "1", sizeof("1")); //telling client that it understands it wants to pull
+	printf("handshook\n");
         read(client_socket, file, sizeof(file)); //receiving file name to copy
         printf("Recieved file named %s\n", file);
         int exists=repo_checker_s(file);
