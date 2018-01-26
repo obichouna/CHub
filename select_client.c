@@ -91,6 +91,7 @@ int file_receive_c(char * FILENAME, int sockfd){
 }
 */
 
+/*
 void chub(){
   //The main loop - Reads from stdin, parses, and runs arguments
   char * line;
@@ -244,6 +245,7 @@ void chub_initiate(){
 }
 
 */
+<<<<<<< HEAD
 
 int file_length(char * s){
     char * isnull = strchr(s,'\0');
@@ -338,13 +340,12 @@ int chub_operations(char * func, int server_socket){
 }
 
 
+=======
+>>>>>>> parent of 92f2623... wrfe
 int main(int argc, char **argv) {
 
   int server_socket;
   char buffer[BUFFER_SIZE];
-
-  chub_initiate();
-  //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
   char * buffer0 = calloc(1024,sizeof(char));
