@@ -275,12 +275,14 @@ int main(int argc, char **argv) {
   char buffer[BUFFER_SIZE];
   char file[BUFFER_SIZE]; //packet size is max size of file we r sending
   char fcontent[PACKET_SIZE];
+  char res[BUFFER_SIZE];
   chub_initiate();
   //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
-   char * buffer0 = calloc(1024,sizeof(char));
-   fgets(buffer0, 1024, stdin);
+   //char * buffer0 = calloc(1024,sizeof(char));
+   memset(buffer, 0, sizeof(buffer));
+   fgets(buffer, 1024, stdin);
    char * newline = strchr(buffer0,'\n');
    *newline = 0;
 
@@ -296,13 +298,14 @@ int main(int argc, char **argv) {
    if (argc == 2)
      server_socket = client_setup( argv[1]);
    else
-     server_socket = client_setup( buffer0);
+     server_socket = client_setup( buffer);
 
    while (1) {
      printf("Would you like to pull a file from server? Type 'clone' if so.\n");
+     fgets(res,sizeof(res),stdin);
+     *strchr(res, '\n') = 0;
 
-
-     if(!strcmp("clone", buffer0)){
+     if(!strcmp("clone", res)){
        printf("in the if part");
        write(server_socket, "clone", sizeof("clone"));
        serv_response("1", server_socket);
