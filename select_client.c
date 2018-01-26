@@ -319,7 +319,7 @@ int chub_operations(char * func, int server_socket){
     if ((fd = open(path, O_RDONLY)) < 0){
       read(fd, fileStuff, sizeof(fileStuff));
       close(fd);
-      //sending file contents up to NULL
+      //fourth:send file 
       write(server_socket, fileStuff, file_length(fileStuff));
       printf("successful push!");
     }
