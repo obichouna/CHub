@@ -1,13 +1,13 @@
 #include "networking.h"
 //#include "chub_headers.h"
 //#define MEM_ERR 42
-#define BUFFER_LEN 256
-#define FILE_LEN 32768
+//#define BUFFER_LENGTH 256
+
 int file_receive_c(char *FILENAME, int sockfd);
 char ** chub_parse(char * line, char * arg);
 int repo_checker_c(char *name);
 int parse_c(char buffer[], int server_socket);
-/*
+
 char ** chub_parse(char * line, char * arg){
 
   char **args = (char**)calloc(64, sizeof(char *));
@@ -19,7 +19,7 @@ char ** chub_parse(char * line, char * arg){
 
   return args;
 }
-*/
+
 int repo_checker_c(char *name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -28,7 +28,6 @@ int repo_checker_c(char *name){
       exit(1);
     }
 }
-/*
 int parse_c(char buffer[], int server_socket){
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
@@ -56,8 +55,7 @@ int parse_c(char buffer[], int server_socket){
     return 0;
   }
 }
-*/
-/*
+
 int file_receive_c(char * FILENAME, int sockfd){
   char buffer[BUFFER_SIZE];
   int bytesReceived = 0;
@@ -72,7 +70,7 @@ int file_receive_c(char * FILENAME, int sockfd){
     }
   printf("stuff 3\n");
   /* Receive data in chunks of 256 bytes */
-/* while((bytesReceived = read(sockfd, buffer, 256)) > 0)
+  while((bytesReceived = read(sockfd, buffer, 256)) > 0)
     {
       printf("stuff 4\n");
       printf("Bytes received %d\n",bytesReceived);
@@ -89,9 +87,7 @@ int file_receive_c(char * FILENAME, int sockfd){
   printf("stuff 6\n");
   return 0;
 }
-*/
 
-/*
 void chub(){
   //The main loop - Reads from stdin, parses, and runs arguments
   char * line;
@@ -207,7 +203,7 @@ void chub_initiate(){
 }
 
 
-/* int chub_functions(char ** args){
+int chub_functions(char ** args){
   if(!args[0]){
     return 0;
   }
@@ -244,108 +240,15 @@ void chub_initiate(){
   return 1;
 }
 
-*/
-<<<<<<< HEAD
+int chub_operations(char ** func){}
 
-int file_length(char * s){
-    char * isnull = strchr(s,'\0');
-    if(isnull == NULL){
-      return sizeof((char)FILE_LEN);
-    }
-    return sizeof((char)((int)(isnull - s)));
-}
-
-//returns number of bytes till null so not huge fileee
-
-
-int wait_c(char * message, int server_socket){
-    char buffer[BUFFER_LEN];
-    while(strcmp(buffer,message)) {
-        read(server_socket, buffer, sizeof(buffer));
-
-        //if it gets error message instead of confirmation
-        if(strncmp(buffer,"error", 5)) {
-            printf("Something went wrong... Please try again.\n");
-            return -1;
-        }
-    }
-    return 0;
-}
-//waits until it receive message from server
-//returns -1 if error
-//returns 0 if worked
-
-void which_file(int server_socket){
-   char * file;
-   printf("\n Please type the name of file: ");
-   int waiting = 1;
-   while(waiting){
-   fgets(file, sizeof(file), stdin);
-   //*strchr(file, '\n') = 0;
-   if(strlen(file) > 0){
-     write(server_socket, file, sizeof(file));
-     waiting = 0;
-   }
- }
-}
-//asks which file you want to do the operation with and then sends that info to the server!
-int chub_operations(char * func, int server_socket){
-  char fileStuff[FILE_LEN];
-  char path[BUFFER_LEN];
-  if(!strcmp("pull",func)){
-  //first: tell it to pull
-  write(server_socket, "pull", 4);
-  wait_c("1", server_socket);
-  //second: tell it file
-  which_file(server_socket);
-    if(!wait_c("2", server_socket)){
-      //third: receive file
-      write(server_socket, "3", 1);
-      read(server_socket, fileStuff, sizeof(fileStuff));
-      //fourth: place to store
-      printf("\n Please type the path to where you want your file stored:\n ");
-      fgets(path, sizeof(path), stdin);
-      *strchr(path, '\n') = 0;
-      int fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0664);
-      //fifth: create file
-      write(fd, fileStuff, file_length(fileStuff));
-      close(fd);
-      printf("successful pull!");
-    }
-  }
-  if(!strcmp("push",func)){
-  // first: tell it to push
-  write(server_socket, "push", 4); //push request sent
-  wait_c("1", server_socket);
-  //second: tell it file
-  which_file(server_socket);
-  if(!wait_c("2", server_socket)){
-    printf("\nPlease type the path to your file: \n");
-    fgets(path, sizeof(path), stdin);
-    *strchr(path, '\n') = 0;
-    //third: copy file contents
-    int fd;
-    if ((fd = open(path, O_RDONLY)) < 0){
-      read(fd, fileStuff, sizeof(fileStuff));
-      close(fd);
-      //fourth:send file
-      write(server_socket, fileStuff, file_length(fileStuff));
-      printf("successful push!");
-    }
-    else{
-      printf("something went wrong...\n");
-    }
-  }
-}
-}
-
-
-=======
->>>>>>> parent of 92f2623... wrfe
 int main(int argc, char **argv) {
 
   int server_socket;
   char buffer[BUFFER_SIZE];
+
+  chub_initiate();
+  //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
   char * buffer0 = calloc(1024,sizeof(char));
