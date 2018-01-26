@@ -300,7 +300,7 @@ int main(int argc, char **argv) {
 
   while (1) {
     printf("Would you like to pull a file from server? Type 'clone' if so.\n");
-    printf("%d\n" ,strcmp("clone", buffer));
+    //printf("%d\n" ,strcmp("clone", buffer));
 
     if(!strcmp("clone", buffer)){
       printf("in the if part\n");
