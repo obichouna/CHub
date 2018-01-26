@@ -8,7 +8,7 @@
    Set up a client running on another computer and enter the server's IP address. 
    Type in the github command and a file name seperated by a space. 
 ## Features:
-  The client is able to establish a connection with the server and they are able to exchange information between them. In order to create a repo on the server, client must type in create, followed by the server name. In order to pull a file from the server, client must type in clone, followed by the file name. Pulling file is supposed to be a primitive version of pulling directories.  
+  The client is able to establish a connection with the server and they are able to exchange information between one another. In order to create a repo on the server, client must type in create, followed by the server name(ex: create awesome-repo). In order to pull a file from the server, client must type in clone, followed by the file name(ex: clone awesome-file.txt). Pulling file is supposed to be a primitive version of pulling directories.  
    
 ## Attempted:
    We tried to create push and pull. We worked on trying to send and recieve files. We managed to get the files sent working but our code for recieving the files never matched up with it so it never ended up working. 
