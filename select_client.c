@@ -1,4 +1,5 @@
 #include "networking.h"
+#include <time.h>
 //#include "chub_headers.h"
 //#define MEM_ERR 42
 //#define BUFFER_LENGTH 256
@@ -7,6 +8,15 @@ int file_receive_c(char *FILENAME, int sockfd);
 char ** chub_parse(char * line, char * arg);
 int repo_checker_c(char *name);
 int parse_c(char buffer[], int server_socket);
+
+int null_bytes(char* s){
+    char * nul_pos = strchr(s,'\0');
+    //checks if NULL is actually in the string
+    if(nul_pos != NULL)
+        return sizeof(char)* (int)(nul_pos - s);
+    else
+        return sizeof(char)*PACKET_SIZE;
+}
 
 char ** chub_parse(char * line, char * arg){
 
@@ -240,13 +250,31 @@ int chub_functions(char ** args){
   return 1;
 }
 
+//waits for message from server
+int serv_response(char * message, int server_socket){
+    char buffer[BUFFER_SIZE];
+    while(strcmp(buffer,message)) {
+        read(server_socket, buffer, sizeof(buffer));
+
+        //if it gets error message instead of confirmation
+        if(strstr(buffer,ERROR_RESPONSE)) {
+            write(server_socket, ERROR_WAIT, sizeof(ERROR_WAIT));
+            read(server_socket, buffer, sizeof(buffer)); //reading follow up error message
+            printf("%s",buffer);
+            return -1;
+        }
+    }
+    return 0;
+}
+
 int chub_operations(char ** func){}
 
 int main(int argc, char **argv) {
 
   int server_socket;
   char buffer[BUFFER_SIZE];
-
+  char file[BUFFER_SIZE]; //packet size is max size of file we r sending
+  char fcontent[PACKET_SIZE];
   chub_initiate();
   //chub();
 
@@ -271,7 +299,35 @@ int main(int argc, char **argv) {
     server_socket = client_setup( buffer0);
 
   while (1) {
-    printf("please enter data: \n");
+    printf("Would you like to pull a file from server? Type 'clone' if so.\n");
+
+
+    if(!strcmp("clone", buffer)){
+      write(server_socket, "pull", sizeof("pull"));
+      serv_response("1", server_socket);
+
+      printf("Please enter name of file you're cloning:\n");
+      fgets(file, sizeof(file), stdin);
+      //  *strchr('\n', file) = 0; //?
+      write(server_socket, file, sizeof(file));
+
+      if(!serv_response("2", server_socket)){
+	memset(fcontent,0,sizeof(fcontent));
+	write(server_socket, "3", sizeof("3"));//responds with a ready to read signal
+	read(server_socket, fcontent, sizeof(fcontent));
+	//storing file contents in client-side file
+	//	printf("\nWhere would you like the file contents to be pulled?(creates new file if one doesnt exist)\n(enter a path to file): ");
+	//fgets(filePath, sizeof(filePath), stdin);
+	//	*strchr(filePath, '\n') = 0;
+	int fd = open("sample.txt", O_CREAT|O_WRONLY|O_TRUNC, 0664);
+	//writing into fd up to NULL
+	write(fd, fcontent, null_bytes(fcontent));
+	close(fd);
+
+	printf("Pulled from server to client\n"); //file,filePath);
+      }
+      
+    }
     //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
     //flush the buffer to immediately print

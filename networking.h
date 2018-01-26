@@ -20,6 +20,12 @@
 #define NO_ARGS 7
 #define USER_EXIT 0
 
+#define ERROR_RESPONSE "-1"
+#define ERROR_WAIT "-2"
+#define PACKET_SIZE 43243
+
+int null_bytes(char *s);
+
 void chub_prompt();
 
 char * chub_read();

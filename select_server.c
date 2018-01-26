@@ -26,6 +26,31 @@
 void process(char *s);
 void subserver(int from_client);
 
+int client_response(char * message, int client_socket){
+    char buffer[BUFFER_SIZE];
+    while(strcmp(buffer,message)) {
+        read(client_socket, buffer, sizeof(buffer));
+
+        //if it gets error message instead of confirmation
+        if(strstr(buffer,ERROR_RESPONSE)) {
+            write(client_socket, ERROR_WAIT, sizeof(ERROR_WAIT));
+            read(client_socket, buffer, sizeof(buffer)); //reading follow up error message
+            printf("%s",buffer);
+            return -1;
+        }
+    }
+    return 0;
+}
+
+int null_bytes(char* s){
+    char * nul_pos = strchr(s,'\0');
+    //checks if NULL is actually in the string
+    if(nul_pos != NULL)
+        return sizeof(char)* (int)(nul_pos - s);
+    else
+        return sizeof(char)*PACKET_SIZE;
+}
+
 int repo_checker_s(char * name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -96,6 +121,8 @@ char * file_send_c(char *filename, int sockfd){
 
 int parse_s(char buffer[], int client_socket){
   char file[BUFFER_SIZE];
+  char fcontent[PACKET_SIZE];
+  int fd;
   // char buffer[BUFFER_LENGTH +1];
   // buffer[BUFFER_LENGTH]=0;
   char **parsed;
@@ -126,16 +153,26 @@ int parse_s(char buffer[], int client_socket){
     ///for cloning repo
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
-        int exists=repo_checker_s(parsed[1]);
+	write(client_socket, "1", sizeof("1")); //telling client that it understands it wants to pull
+	read(client_socket, file, sizeof(file)); //receiving file name to copy
+        int exists=repo_checker_s(file);
         if(exists){
-          printf("stuff\n");
-	        file_send_c(parsed[1], client_socket);
-	        printf("Sent file named: %s \n", parsed[1]);
+          write(client_socket, "We found the file! Will attempt to get it to you\n", sizeof("We found the file! Will attempt to get it to you\n"));
+	  //accessing file contents
+	  memset(fcontent,0,sizeof(fcontent));
+	  read(fd, fcontent, sizeof(fcontent));
+	  //sending file contents up to NULL
+	  client_response("3", client_socket);
+	  write(client_socket, fcontent, null_bytes(fcontent));
+	  close(fd);
+	  printf("[Server]: pulled from '%s'\n", file);
+	  //file_send_c(parsed[1], client_socket);
+	  printf("Sent file named: %s \n", parsed[1]);
 		// file_receive_c(parsed[1], client_socket);
 
           return 1;
         }else{
-          printf("Repository doesn't exist. Unable to clone.\n");
+          write(client_socket, "ERROR: File doesn't exist. Unable to clone.\n", sizeof("ERROR: File doesn't exist. Unable to clone.\n"));
         }
 
       }
