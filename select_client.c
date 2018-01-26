@@ -279,9 +279,9 @@ int main(int argc, char **argv) {
   //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
-  char * buffer0 = calloc(1024,sizeof(char));
-  fgets(buffer0, 1024, stdin);
-  char * newline = strchr(buffer0,'\n');
+  //char * buffer0 = calloc(1024,sizeof(char));
+  fgets(buffer, 1024, stdin);
+  char * newline = strchr(buffer,'\n');
   *newline = 0;
 
   // int sd = client_connect(buffer0);
@@ -296,13 +296,13 @@ int main(int argc, char **argv) {
   if (argc == 2)
     server_socket = client_setup( argv[1]);
   else
-    server_socket = client_setup( buffer0);
+    server_socket = client_setup( buffer);
 
   while (1) {
     printf("Would you like to pull a file from server? Type 'clone' if so.\n");
 
 
-    if(!strncmp("clone", buffer, 5)){
+    if(!strcmp("clone", buffer)){
       printf("in the if part");
       write(server_socket, "clone", sizeof("clone"));
       serv_response("1", server_socket);
