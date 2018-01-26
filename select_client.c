@@ -340,6 +340,7 @@ int main(int argc, char **argv) {
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
+      i = 0;
       while (1) {
         printf("please enter data: \n");
         //  printf("Would you like to get a file from server?\n");
