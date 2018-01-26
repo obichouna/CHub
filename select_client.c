@@ -368,7 +368,7 @@ int main(int argc, char **argv) {
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
-      //create(read_fds, server_socket, buffer);
+      create(read_fds, server_socket, buffer);
     }
   }//end loop
 }
