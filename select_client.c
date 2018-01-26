@@ -47,7 +47,6 @@ int parse_c(char buffer[], int server_socket){
   // read(client_socket, buffer, BUFFER_LENGTH);
   parsed = chub_parse(buffer, " ");
   if(parsed[0]){
-
     ///for creating repo on server
     if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
@@ -60,6 +59,7 @@ int parse_c(char buffer[], int server_socket){
           return 1;
 	}
 	printf("Repository with that name already exists. Could not create. \n");
+	return 0;
       }
     }
     printf("Something went wrong... please try again.\n");
