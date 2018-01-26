@@ -303,7 +303,7 @@ int main(int argc, char **argv) {
 
 
     if(!strcmp("clone", buffer)){
-      write(server_socket, "pull", sizeof("pull"));
+      write(server_socket, "clone", sizeof("clone"));
       serv_response("1", server_socket);
 
       printf("Please enter name of file you're cloning:\n");
