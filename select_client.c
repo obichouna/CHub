@@ -300,7 +300,8 @@ int main(int argc, char **argv) {
    else
      server_socket = client_setup( buffer);
 
-   while (1) {
+    int i = 1;
+   while (i) {
      printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
      *strchr(res, '\n') = 0;
@@ -312,7 +313,7 @@ int main(int argc, char **argv) {
 
       printf("Please enter name of file you're cloning:\n");
       fgets(file, sizeof(file), stdin);
-      *strchr('\n', file) = 0; 
+      *strchr('\n', file) = 0;
       write(server_socket, file, sizeof(file));
 
       if(!serv_response("2", server_socket)){
@@ -330,7 +331,7 @@ int main(int argc, char **argv) {
 
 	printf("Pulled from server to client\n"); //file,filePath);
       }
-
+      i = 0;
     }
     //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
