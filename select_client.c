@@ -300,8 +300,8 @@ int main(int argc, char **argv) {
 
   while (1) {
     printf("Would you like to pull a file from server? Type 'clone' if so.\n");
-
-
+    printf(strcmp("clone", buffer));
+    
     if(!strcmp("clone", buffer)){
       printf("in the if part\n");
       //write(server_socket,"in the if part\n", sizeof("in the if part\n"));
