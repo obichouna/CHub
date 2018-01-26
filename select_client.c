@@ -19,7 +19,7 @@ char ** chub_parse(char * line, char * arg){
 
   return args;
 }
-*/ 
+*/
 int repo_checker_c(char *name){
   FILE *fs = fopen(name, "r");
   if(fs == NULL)
@@ -89,7 +89,7 @@ int file_receive_c(char * FILENAME, int sockfd){
   printf("stuff 6\n");
   return 0;
 }
-*/ 
+*/
 
 void chub(){
   //The main loop - Reads from stdin, parses, and runs arguments
@@ -245,14 +245,14 @@ void chub_initiate(){
 
 */
 
-int file_length(char* s){
+int file_length(char * s){
     char * isnull = strchr(s,'\0');
     if(isnull == NULL){
-      return sizeof((char)*FILE_LEN);
+      return sizeof((char)FILE_LEN);
     }
-    return sizeof((char)* (int)(isnull - s));
+    return sizeof((char)((int)(isnull - s)));
 }
-      
+
 //returns number of bytes till null so not huge fileee
 
 
@@ -274,12 +274,19 @@ int wait_c(char * message, int server_socket){
 //returns 0 if worked
 
 void which_file(int server_socket){
-   printf("\n Please type the name of file:: ");
+   char * file;
+   printf("\n Please type the name of file: ");
+   int waiting = 1;
+   while(waiting){
    fgets(file, sizeof(file), stdin);
-   *strchr(file, '\n') = 0;
-   write(server_socket, file, sizeof(file));
+   //*strchr(file, '\n') = 0;
+   if(strlen(file) > 0){
+     write(server_socket, file, sizeof(file));
+     waiting = 0;
+   }
+ }
 }
-//asks which file you want to do the operation with and then sends that info to the server! 
+//asks which file you want to do the operation with and then sends that info to the server!
 int chub_operations(char * func, int server_socket){
   char fileStuff[FILE_LEN];
   char path[BUFFER_LEN];
@@ -290,7 +297,7 @@ int chub_operations(char * func, int server_socket){
   //second: tell it file
   which_file(server_socket);
     if(!wait_c("2", server_socket)){
-     `//third: receive file 
+      //third: receive file
       write(server_socket, "3", 1);
       read(server_socket, fileStuff, sizeof(fileStuff));
       //fourth: place to store
@@ -298,13 +305,13 @@ int chub_operations(char * func, int server_socket){
       fgets(path, sizeof(path), stdin);
       *strchr(path, '\n') = 0;
       int fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0664);
-      //fifth: create file 
+      //fifth: create file
       write(fd, fileStuff, file_length(fileStuff));
       close(fd);
       printf("successful pull!");
     }
   }
-  !strcmp("push",buffer)){
+  if(!strcmp("push",func)){
   // first: tell it to push
   write(server_socket, "push", 4); //push request sent
   wait_c("1", server_socket);
@@ -319,7 +326,7 @@ int chub_operations(char * func, int server_socket){
     if ((fd = open(path, O_RDONLY)) < 0){
       read(fd, fileStuff, sizeof(fileStuff));
       close(fd);
-      //fourth:send file 
+      //fourth:send file
       write(server_socket, fileStuff, file_length(fileStuff));
       printf("successful push!");
     }
