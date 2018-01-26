@@ -268,7 +268,6 @@ int serv_response(char * message, int server_socket){
 }
 
 int create (fd_set read_fds, int server_socket, char * buffer ) {
-
   while (1) {
     printf("please enter data: \n");
     fflush(stdout);
@@ -368,7 +367,36 @@ int main(int argc, char **argv) {
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
-      create(read_fds, server_socket, buffer);
+      while (1) {
+        printf("please enter data: \n");
+        fflush(stdout);
+        FD_ZERO(&read_fds);
+        FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
+        FD_SET(server_socket, &read_fds); //add socket to fd set
+
+        //select will block until either fd is ready
+        select(server_socket + 1, &read_fds, NULL, NULL, NULL);
+
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+            fgets(buffer, sizeof(buffer), stdin);
+            *strchr(buffer, '\n') = 0;
+            write(server_socket, buffer, sizeof(buffer));
+            read(server_socket, buffer, sizeof(buffer));
+            //parse_c(buffer, server_socket);
+            printf("received: [%s]\n", buffer);
+            //  if (strcmp(buffer,"[clone]")):
+          }//end stdin select
+
+          if (FD_ISSET(server_socket, &read_fds)) {
+            read(server_socket, buffer, sizeof(buffer));
+            printf("[SERVER BROADCAST] [%s]\n", buffer);
+            printf("enter data: ");
+            parse_c(buffer, server_socket);
+            //the above printf does not have \n
+            //flush the buffer to immediately print
+            fflush(stdout);
+          }//end socket select
+        }//end loop
     }
   }//end loop
 }
