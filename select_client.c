@@ -334,10 +334,7 @@ int main(int argc, char **argv) {
      printf("What would you like to do? Type 'clone' or 'create'.\n");
      //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
-     *strchr(res, '\n') = 0;
-
-
-     
+     //*strchr(res, '\n') = 0;
      //clone is essentially for pulling from another computer
      if(!strcmp("clone", res)){
        //printf("in the if part");
