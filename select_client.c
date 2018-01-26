@@ -311,7 +311,6 @@ int main(int argc, char **argv) {
   char fcontent[PACKET_SIZE];
   char res[BUFFER_SIZE];
   chub_initiate();
-  //chub();
 
   printf("Type the IP address of the server you want to connect to.\n");
    //char * buffer0 = calloc(1024,sizeof(char));
@@ -368,6 +367,7 @@ int main(int argc, char **argv) {
        close(server_socket);
        exit(0);
      }
+     
     fflush(stdout);
 
     //select() modifies read_fds
@@ -400,20 +400,14 @@ int main(int argc, char **argv) {
       //the above printf does not have \n
       //flush the buffer to immediately print
       fflush(stdout);
-    }//end socket select
-    //fflush(stdout);
-    //select() modifies read_fds
-    //we must reset it at each iteration
-    //FD_ZERO(&read_fds);
-    //FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
-    //FD_SET(server_socket, &read_fds); //add socket to fd set
+    }
 
 
 
      //for creating repos on server
-     if (!strncmp("create", res, 6)){
+    // if (!strncmp("create", res, 6)){
 
-      create(server_socket, buffer);
-    }
+    //create(server_socket, buffer);
+    //}
   }//end loop
 }
