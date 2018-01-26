@@ -303,7 +303,7 @@ int main(int argc, char **argv) {
     //printf("%d\n" ,strcmp("clone", buffer));
 
     if(!strcmp("clone", buffer)){
-      //printf("in the if part\n");
+      printf("in the if part");
       //write(server_socket,"in the if part\n", sizeof("in the if part\n"));
       write(server_socket, "clone", sizeof("clone"));
       serv_response("1", server_socket);
