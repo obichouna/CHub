@@ -303,6 +303,7 @@ int main(int argc, char **argv) {
 
 
     if(!strcmp("clone", buffer)){
+      printf("in the if part");
       write(server_socket, "clone", sizeof("clone"));
       serv_response("1", server_socket);
 
@@ -326,7 +327,7 @@ int main(int argc, char **argv) {
 
 	printf("Pulled from server to client\n"); //file,filePath);
       }
-      
+
     }
     //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
