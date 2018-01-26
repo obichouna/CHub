@@ -306,13 +306,13 @@ int main(int argc, char **argv) {
      *strchr(res, '\n') = 0;
 
      if(!strcmp("clone", res)){
-       printf("in the if part");
+       //printf("in the if part");
        write(server_socket, "clone", sizeof("clone"));
        serv_response("1", server_socket);
 
       printf("Please enter name of file you're cloning:\n");
       fgets(file, sizeof(file), stdin);
-      //  *strchr('\n', file) = 0; //?
+      *strchr('\n', file) = 0; 
       write(server_socket, file, sizeof(file));
 
       if(!serv_response("2", server_socket)){
