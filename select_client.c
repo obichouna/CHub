@@ -323,7 +323,6 @@ int main(int argc, char **argv) {
      server_socket = client_setup( argv[1]);
    else
      server_socket = client_setup( buffer);
-
     int i = 1;
     while (1) {
      printf("What would you like to do? Type 'clone' or 'create'.\n");
@@ -399,9 +398,9 @@ int main(int argc, char **argv) {
 
 
      //for creating repos on server
-    // if (!strncmp("create", res, 6)){
+    if (!strncmp("create", res, 6)){
 
-    //create(server_socket, buffer);
-    //}
+    create(server_socket, buffer);
+    }
   }//end loop
 }
