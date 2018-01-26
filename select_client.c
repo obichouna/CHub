@@ -302,7 +302,8 @@ int main(int argc, char **argv) {
 
     int i = 1;
    while (1) {
-     printf("Would you like to pull a file from server? Type 'clone' if so.\n");
+     printf("What would you like to do? Type 'clone' or 'create'.\n");
+     //printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
      *strchr(res, '\n') = 0;
 
@@ -310,65 +311,55 @@ int main(int argc, char **argv) {
        //printf("in the if part");
        write(server_socket, "clone", sizeof("clone"));
        serv_response("1", server_socket);
+       printf("Please enter name of file you're cloning:\n");
+       fgets(file, sizeof(file), stdin);
+       *strchr('\n', file) = 0;
+       write(server_socket, file, sizeof(file));
+       if(!serv_response("2", server_socket)){
+         memset(fcontent,0,sizeof(fcontent));
+         write(server_socket, "3", sizeof("3"));//responds with a ready to read signal
+         read(server_socket, fcontent, sizeof(fcontent));
+         //storing file contents in client-side file
+         //	printf("\nWhere would you like the file contents to be pulled?(creates new file if one doesnt exist)\n(enter a path to file): ");
+	       //fgets(filePath, sizeof(filePath), stdin);
+	       //	*strchr(filePath, '\n') = 0;
+         int fd = open("sample.txt", O_CREAT|O_WRONLY|O_TRUNC, 0664);
+         //writing into fd up to NULL
+	       write(fd, fcontent, null_bytes(fcontent));
+	       close(fd);
+         printf("Pulled from server to client\n"); //file,filePath);
+       }
+     }
 
-      printf("Please enter name of file you're cloning:\n");
-      fgets(file, sizeof(file), stdin);
-      *strchr('\n', file) = 0;
-      write(server_socket, file, sizeof(file));
-
-      if(!serv_response("2", server_socket)){
-	memset(fcontent,0,sizeof(fcontent));
-	write(server_socket, "3", sizeof("3"));//responds with a ready to read signal
-	read(server_socket, fcontent, sizeof(fcontent));
-	//storing file contents in client-side file
-	//	printf("\nWhere would you like the file contents to be pulled?(creates new file if one doesnt exist)\n(enter a path to file): ");
-	//fgets(filePath, sizeof(filePath), stdin);
-	//	*strchr(filePath, '\n') = 0;
-	int fd = open("sample.txt", O_CREAT|O_WRONLY|O_TRUNC, 0664);
-	//writing into fd up to NULL
-	write(fd, fcontent, null_bytes(fcontent));
-	close(fd);
-
-	printf("Pulled from server to client\n"); //file,filePath);
-      }
-    }
-
-    //  printf("Would you like to get a file from server?\n");
-    //the above printf does not have \n
-    //flush the buffer to immediately print
     fflush(stdout);
-
     //select() modifies read_fds
     //we must reset it at each iteration
     FD_ZERO(&read_fds);
     FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
     FD_SET(server_socket, &read_fds); //add socket to fd set
 
-    //select will block until either fd is ready
-    select(server_socket + 1, &read_fds, NULL, NULL, NULL);
+    if (!strcmp("create", res)){
+      //select will block until either fd is ready
+      select(server_socket + 1, &read_fds, NULL, NULL, NULL);
+      if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+        fgets(buffer, sizeof(buffer), stdin);
+        *strchr(buffer, '\n') = 0;
+        write(server_socket, buffer, sizeof(buffer));
+        read(server_socket, buffer, sizeof(buffer));
+        //parse_c(buffer, server_socket);
+        printf("received: [%s]\n", buffer);
+        //  if (strcmp(buffer,"[clone]")):
+      }//end stdin select
 
-    if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-      fgets(buffer, sizeof(buffer), stdin);
-      *strchr(buffer, '\n') = 0;
-      write(server_socket, buffer, sizeof(buffer));
-      read(server_socket, buffer, sizeof(buffer));
-      //parse_c(buffer, server_socket);
-      printf("received: [%s]\n", buffer);
-      //  if (strcmp(buffer,"[clone]")):
-    }//end stdin select
-
-    //currently the server is not set up to
-    //send messages to all the clients, but
-    //this would allow for broadcast messages
-    if (FD_ISSET(server_socket, &read_fds)) {
-      read(server_socket, buffer, sizeof(buffer));
-      printf("[SERVER BROADCAST] [%s]\n", buffer);
-      printf("enter data: ");
-      parse_c(buffer, server_socket);
-      //the above printf does not have \n
-      //flush the buffer to immediately print
-      fflush(stdout);
-    }//end socket select
-
+      if (FD_ISSET(server_socket, &read_fds)) {
+        read(server_socket, buffer, sizeof(buffer));
+        printf("[SERVER BROADCAST] [%s]\n", buffer);
+        printf("enter data: ");
+        parse_c(buffer, server_socket);
+        //the above printf does not have \n
+        //flush the buffer to immediately print
+        fflush(stdout);
+      }//end socket select
+    }
   }//end loop
 }
