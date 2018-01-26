@@ -302,7 +302,7 @@ int main(int argc, char **argv) {
     printf("Would you like to pull a file from server? Type 'clone' if so.\n");
 
 
-    if(!strcmp("clone", buffer0)){
+    if(!strncmp("clone", buffer, 5)){
       printf("in the if part");
       write(server_socket, "clone", sizeof("clone"));
       serv_response("1", server_socket);
