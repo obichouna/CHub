@@ -341,6 +341,7 @@ int main(int argc, char **argv) {
 
     if (!strcmp("create", res)){
       //select will block until either fd is ready
+      while(1){
       select(server_socket + 1, &read_fds, NULL, NULL, NULL);
       if (FD_ISSET(STDIN_FILENO, &read_fds)) {
         fgets(buffer, sizeof(buffer), stdin);
@@ -361,6 +362,7 @@ int main(int argc, char **argv) {
         //flush the buffer to immediately print
         fflush(stdout);
       }//end socket select
+    }
       i = 0;
     }
   }//end loop
