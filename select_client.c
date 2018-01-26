@@ -335,6 +335,9 @@ int main(int argc, char **argv) {
      fgets(res,sizeof(res),stdin);
      *strchr(res, '\n') = 0;
 
+
+     
+     //clone is essentially for pulling from another computer
      if(!strcmp("clone", res)){
        //printf("in the if part");
        write(server_socket, "clone", sizeof("clone"));
@@ -367,7 +370,10 @@ int main(int argc, char **argv) {
     //FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
-    if (!strcmp("create", res)){
+
+
+     //for creating repos on server
+     if (!strncmp("create", res, 6)){
 
       create(server_socket, buffer);
     }
