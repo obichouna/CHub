@@ -306,25 +306,20 @@ int create (int server_socket, char * buffer ) {
 int chub_operations(char ** func){}
 
 int main(int argc, char **argv) {
-
   int server_socket;
   char buffer[BUFFER_SIZE];
   char file[BUFFER_SIZE]; //packet size is max size of file we r sending
   char fcontent[PACKET_SIZE];
   char res[BUFFER_SIZE];
   chub_initiate();
-
   printf("Type the IP address of the server you want to connect to.\n");
    //char * buffer0 = calloc(1024,sizeof(char));
    memset(buffer, 0, sizeof(buffer));
    fgets(buffer, 1024, stdin);
    char * newline = strchr(buffer,'\n');
    *newline = 0;
-
-
    fd_set read_fds;
-
-   if (argc == 2)
+  if (argc == 2)
      server_socket = client_setup( argv[1]);
    else
      server_socket = client_setup( buffer);
