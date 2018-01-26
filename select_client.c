@@ -13,7 +13,7 @@ int null_bytes(char* s){
     char * nul_pos = strchr(s,'\0');
     //checks if NULL is actually in the string
     if(nul_pos != NULL)
-        return sizeof(char)* (int)(nul_pos - s);
+        return sizeof(char)*(int)(nul_pos - s);
     else
         return sizeof(char)*PACKET_SIZE;
 }
