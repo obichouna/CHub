@@ -72,15 +72,15 @@ int file_receive_c(char * FILENAME, int sockfd){
   char buffer[BUFFER_SIZE];
   int bytesReceived = 0;
   FILE *fp;
-  printf("stuff 1\n");
+  // printf("stuff 1\n");
   fp = fopen(FILENAME, "r");
-  printf("stuff 2\n");
+  // printf("stuff 2\n");
   if(NULL == fp)
     {
-      printf("Error opening file");
+      printf("Error opening file\n");
       return 1;
     }
-  printf("stuff 3\n");
+  // printf("stuff 3\n");
   /* Receive data in chunks of 256 bytes */
   while((bytesReceived = read(sockfd, buffer, 256)) > 0)
     {
@@ -90,13 +90,13 @@ int file_receive_c(char * FILENAME, int sockfd){
       fwrite(buffer, 1,bytesReceived,fp);
       // printf("%s \n", recvBuff);
     }
-  printf("stuff 5\n");
+  // printf("stuff 5\n");
   if(bytesReceived < 0)
     {
       printf("\n Read Error \n");
     }
 
-  printf("stuff 6\n");
+  //printf("stuff 6\n");
   return 0;
 }
 
