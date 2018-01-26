@@ -267,7 +267,8 @@ int serv_response(char * message, int server_socket){
     return 0;
 }
 
-int create () {
+int create (fd_set read_fds, int server_socket, char * buffer ) {
+
   while (1) {
     printf("please enter data: \n");
     fflush(stdout);
@@ -373,7 +374,7 @@ int main(int argc, char **argv) {
     //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
-      create();
+      create(read_fds, server_socket, buffer);
     }
   }//end loop
 }
