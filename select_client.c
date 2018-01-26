@@ -245,6 +245,17 @@ void chub_initiate(){
 
 */
 
+int file_length(char* s){
+    char * isnull = strchr(s,'\0');
+    if(isnull == NULL){
+      return sizeof((char)*FILE_LEN);
+    }
+    return sizeof((char)* (int)(isnull - s));
+}
+      
+//returns number of bytes till null so not huge fileee
+
+
 int wait_c(char * message, int server_socket){
     char buffer[BUFFER_LEN];
     while(strcmp(buffer,message)) {
@@ -268,64 +279,57 @@ void which_file(int server_socket){
    *strchr(file, '\n') = 0;
    write(server_socket, file, sizeof(file));
 }
+//asks which file you want to do the operation with and then sends that info to the server! 
 int chub_operations(char * func, int server_socket){
-  char fileStuff[FILE_LEN]; 
+  char fileStuff[FILE_LEN];
+  char path[BUFFER_LEN];
   if(!strcmp("pull",func)){
-   //first: tell it to pull
-    write(server_socket, "pull", 4)); //pull request sent
-    wait_c("1", server_socket);
-    //second: tell it file
-    which_file(server_socket);
+  //first: tell it to pull
+  write(server_socket, "pull", 4);
+  wait_c("1", server_socket);
+  //second: tell it file
+  which_file(server_socket);
     if(!wait_c("2", server_socket)){
-      //receiving file contents
+     `//third: receive file 
       write(server_socket, "3", 1);
       read(server_socket, fileStuff, sizeof(fileStuff));
-                //storing file contents in client-side file
-                printf("\nWhere would you like the file contents to be pulled?(creates new file if one doesnt exist)\n(enter a path to file): ");
-                fgets(filePath, sizeof(filePath), stdin);
-                *strchr(filePath, '\n') = 0;
-                int fd = open(filePath, O_CREAT|O_WRONLY|O_TRUNC, 0664);
-                //writing into fd up to NULL
-                write(fd, fileContent, num_non_null_bytes(fileContent));
-                close(fd);
+      //fourth: place to store
+      printf("\n Please type the path to where you want your file stored:\n ");
+      fgets(path, sizeof(path), stdin);
+      *strchr(path, '\n') = 0;
+      int fd = open(path, O_CREAT|O_WRONLY|O_TRUNC, 0664);
+      //fifth: create file 
+      write(fd, fileStuff, file_length(fileStuff));
+      close(fd);
+      printf("successful pull!");
+    }
+  }
+  !strcmp("push",buffer)){
+  // first: tell it to push
+  write(server_socket, "push", 4); //push request sent
+  wait_c("1", server_socket);
+  //second: tell it file
+  which_file(server_socket);
+  if(!wait_c("2", server_socket)){
+    printf("\nPlease type the path to your file: \n");
+    fgets(path, sizeof(path), stdin);
+    *strchr(path, '\n') = 0;
+    //third: copy file contents
+    int fd;
+    if ((fd = open(path, O_RDONLY)) < 0){
+      read(fd, fileStuff, sizeof(fileStuff));
+      close(fd);
+      //sending file contents up to NULL
+      write(server_socket, fileStuff, file_length(fileStuff));
+      printf("successful push!");
+    }
+    else{
+      printf("something went wrong...\n");
+    }
+  }
+}
+}
 
-                printf("Pulled from '%s' to '%s'\n", file,filePath);
-            }
-
-        }
-
-else if(!strcmp("exit",buffer)) {
-            printf("Thank you for using FTP. Goodbye\n");
-            close(server_socket);
-            exit(0);
-        }
-
-!strcmp("push",buffer)){
-            //telling server push
-            write(server_socket, "push", 4); //push request sent
-            wait_response("1", server_socket);
-
-            //sending file name
-            printf("\n What is the name of the file you are pushing into?(if it doesnt exist yet one will be created): ");
-            fgets(file, sizeof(file), stdin);
-            *strchr(file, '\n') = 0;
-            write(server_socket, file, sizeof(file)); //file name sent
-
-            if(!wait_response("2", server_socket)){//wait for confirmation to send file contents
-                //file transfer
-                printf("\nWhat is the path to this file?: ");
-                fgets(filePath, sizeof(filePath), stdin);
-                *strchr(filePath, '\n') = 0;
-                //accessing file contents
-                int fd;
-                if ((fd = open(filePath, O_RDONLY)) < 0) //checks if file exists
-                    handle_error();
-                read(fd, fileContent, sizeof(fileContent));
-                close(fd);
-                //sending file contents up to NULL
-                write(server_socket, fileContent, num_non_null_bytes(fileContent));
-                printf("Pushed from '%s' to '%s'\n", filePath, file); //***
-            }
 
 int main(int argc, char **argv) {
 
