@@ -301,7 +301,7 @@ int main(int argc, char **argv) {
      server_socket = client_setup( buffer);
 
     int i = 1;
-   while (i) {
+   while (1) {
      printf("Would you like to pull a file from server? Type 'clone' if so.\n");
      fgets(res,sizeof(res),stdin);
      *strchr(res, '\n') = 0;
@@ -331,13 +331,11 @@ int main(int argc, char **argv) {
 
 	printf("Pulled from server to client\n"); //file,filePath);
       }
-    i = 0;
     }
-  }
+
     //  printf("Would you like to get a file from server?\n");
     //the above printf does not have \n
     //flush the buffer to immediately print
-    while (1) {
     fflush(stdout);
 
     //select() modifies read_fds
