@@ -48,7 +48,7 @@ int parse_c(char buffer[], int server_socket){
   if(parsed[0]){
 
     ///for creating repo on server
-    if(!strncmp("create", parsed[0], 5)){
+    if(!strncmp("clone", parsed[0], 5)){
       if(parsed[1]){
         int exists=repo_checker_c(parsed[1]);
 	if(!exists){
@@ -332,16 +332,55 @@ int main(int argc, char **argv) {
        i = 0;
      }
 
-    fflush(stdout);
+    //fflush(stdout);
     //select() modifies read_fds
     //we must reset it at each iteration
-    FD_ZERO(&read_fds);
-    FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
-    FD_SET(server_socket, &read_fds); //add socket to fd set
+    //FD_ZERO(&read_fds);
+    //FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
+    //FD_SET(server_socket, &read_fds); //add socket to fd set
 
     if (!strcmp("create", res)){
+      while (1) {
+        printf("please enter data: \n");
+        //  printf("Would you like to get a file from server?\n");
+        //the above printf does not have \n
+        //flush the buffer to immediately print
+        fflush(stdout);
+
+        //select() modifies read_fds
+        //we must reset it at each iteration
+        FD_ZERO(&read_fds);
+        FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
+        FD_SET(server_socket, &read_fds); //add socket to fd set
+
+        //select will block until either fd is ready
+        select(server_socket + 1, &read_fds, NULL, NULL, NULL);
+
+        if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+            fgets(buffer, sizeof(buffer), stdin);
+            *strchr(buffer, '\n') = 0;
+            write(server_socket, buffer, sizeof(buffer));
+            read(server_socket, buffer, sizeof(buffer));
+            //parse_c(buffer, server_socket);
+            printf("received: [%s]\n", buffer);
+            //  if (strcmp(buffer,"[clone]")):
+          }//end stdin select
+
+          //currently the server is not set up to
+          //send messages to all the clients, but
+          //this would allow for broadcast messages
+          if (FD_ISSET(server_socket, &read_fds)) {
+            read(server_socket, buffer, sizeof(buffer));
+            printf("[SERVER BROADCAST] [%s]\n", buffer);
+            printf("enter data: ");
+            parse_c(buffer, server_socket);
+            //the above printf does not have \n
+            //flush the buffer to immediately print
+            fflush(stdout);
+          }//end socket select
+        }//end loop
       //select will block until either fd is ready
-      while(1){
+    /*  while(1){
       select(server_socket + 1, &read_fds, NULL, NULL, NULL);
       if (FD_ISSET(STDIN_FILENO, &read_fds)) {
         fgets(buffer, sizeof(buffer), stdin);
@@ -362,8 +401,7 @@ int main(int argc, char **argv) {
         //flush the buffer to immediately print
         fflush(stdout);
       }//end socket select
-    }
-      i = 0;
+    } */
     }
   }//end loop
 }
