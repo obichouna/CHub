@@ -241,7 +241,34 @@ int chub_functions(char ** args){
 }
 
 int chub_operations(char ** func){}
+/*
+!strcmp("push",buffer)){ //push file code
+            //sending push request
+            write(server_socket, "PUSH", sizeof("PUSH")); //push request sent
+            wait_response("1", server_socket);
 
+            //sending file name
+            printf("\nWhat is the name of the file you are pushing into?(if it doesnt exist yet one will be created): ");
+            fgets(file, sizeof(file), stdin);
+            *strchr(file, '\n') = 0;
+            write(server_socket, file, sizeof(file)); //file name sent
+
+            if(!wait_response("2", server_socket)){//wait for confirmation to send file contents
+                //file transfer
+                printf("\nWhat is the path to this file?: ");
+                fgets(filePath, sizeof(filePath), stdin);
+                *strchr(filePath, '\n') = 0;
+                //accessing file contents
+                int fd;
+                if ((fd = open(filePath, O_RDONLY)) < 0) //checks if file exists
+                    handle_error();
+                read(fd, fileContent, sizeof(fileContent));
+                close(fd);
+                //sending file contents up to NULL
+                write(server_socket, fileContent, num_non_null_bytes(fileContent));
+                printf("Pushed from '%s' to '%s'\n", filePath, file); //***
+            }
+*/
 int main(int argc, char **argv) {
 
   int server_socket;
