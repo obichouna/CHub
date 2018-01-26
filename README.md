@@ -3,10 +3,10 @@
 ## Description: 
   Our very primitive bug filled not functioning version of GitHub which we named CHub. 
 ## Instructions on how to use your project:
-   Run make. 
-   Set up a server running on one computer and determine its IP address.
-   Set up a client running on another computer and enter the server's IP address. 
-   Type in the github command and a file name seperated by a space. 
+   <p>Run make. </p>
+  <p> Set up a server running on one computer and determine its IP address.</p>
+   <p>Set up a client running on another computer, press enter and type the server's IP address. Don't try to log in it won't work :( </p>
+   <p> Type in a github command (either create or push). It may work but it most likely won't. </p>
 ## Features:
   The client is able to establish a connection with the server and they are able to exchange information between one another. In order to create a repo on the server, client must type in create, followed by the server name(ex: create awesome-repo). In order to pull a file from the server, client must type in clone, followed by the file name(ex: clone awesome-file.txt). Pulling file is supposed to be a primitive version of pulling directories.  
    
